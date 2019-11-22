@@ -1,5 +1,6 @@
 const Alexa = require('ask-sdk-core')
 const request = require('request')
+const url = 'http://35.230.20.197:5000'
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -28,22 +29,48 @@ const MakeBobaIntentHandler = {
         )
     },
     handle(handlerInput) {
-        console.log(handlerInput)
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
         const tea = intent.slots.tea.value
         const sugar = intent.slots.sugar.value
         const ice = intent.slots.ice.value
-        const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
-        return (
-            handlerInput.responseBuilder
+
+        const body = {
+            options: {
+                tea: tea,
+                sugar: parseInt(sugar),
+                ice: parseInt(ice)
+            }
+        }
+
+        request({ method: 'POST', uri: url, body: body, json: true }, function(
+            err,
+            res,
+            body
+        ) {
+            const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+
+            return handlerInput.responseBuilder
                 .speak(speakOutput)
                 .withSimpleCard('Title', 'Content')
                 .getResponse()
-        )
+        })
     }
 }
 
+const GetQueueIntentHandler = {
+    canHandle(handlerInput) {
+        return (
+            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+                'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+                'GetQueueIntent'
+        )
+    },
+    handle(handlerInput) {
+        return handlerInput.speak('Queue').getResponse()
+    }
+}
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return (
@@ -136,6 +163,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         MakeBobaIntentHandler,
+        GetQueueIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
