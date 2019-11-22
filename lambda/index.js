@@ -34,7 +34,7 @@ const MakeBobaIntentHandler = {
         const tea = intent.slots.tea.value
         const sugar = intent.slots.sugar.value
         const ice = intent.slots.ice.value
-        const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming up.`
+        const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
         return (
             handlerInput.responseBuilder
                 .speak(speakOutput)
