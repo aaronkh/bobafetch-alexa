@@ -10,7 +10,7 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         const speakOutput =
-            'Welcome, you can say Hello or Help. Which would you like to try?'
+            'Ready for all your boba making needs. Let me know if you need any help'
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -30,14 +30,17 @@ const MakeBobaIntentHandler = {
     handle(handlerInput) {
         const { requestEnvelope } = handlerInput
         const { intent } = requestEnvelope
+        console.log(intent)
         const tea = intent.slots.tea.value
         const sugar = intent.slots.sugar.value
         const ice = intent.slots.ice.value
         const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming up.`
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .withSimpleCard('Title', 'Content')
-            .getResponse()
+        return (
+            handlerInput.responseBuilder
+                .speak(speakOutput)
+                // .withSimpleCard('Title', 'Content')
+                .getResponse()
+        )
     }
 }
 
