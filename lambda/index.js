@@ -43,7 +43,7 @@ const MakeBobaIntentHandler = {
             }
         }
 
-        request({ method: 'POST', uri: url, body: body, json: true }, function(
+        request({ method: 'POST', uri: `${url}/queue`, body: body, json: true }, function(
             err,
             res,
             b
