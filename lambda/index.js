@@ -28,7 +28,7 @@ const MakeBobaIntentHandler = {
                 'MakeBobaIntent'
         )
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
         const tea = intent.slots.tea.value
@@ -43,24 +43,29 @@ const MakeBobaIntentHandler = {
             }
         }
 
-        rp({ method: 'POST', uri: `${url}/queue`, body: body, json: true })
-            .then(body => {
-                const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
-
-                console.log(body)
-
-                return handlerInput.responseBuilder
-                    .speak(speakOutput)
-                    .withSimpleCard('Title', 'Content')
-                    .getResponse()
+        try {
+            const body = await rp({
+                method: 'POST',
+                uri: `${url}/queue`,
+                body: body,
+                json: true
             })
-            .catch(err => {
-                console.log(err)
 
-                return handlerInput.responseBuilder
-                    .speak('Something went wrong. Please try again')
-                    .getResponse()
-            })
+            const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+
+            console.log(body)
+
+            return handlerInput.responseBuilder
+                .speak(speakOutput)
+                .withSimpleCard('Title', 'Content')
+                .getResponse()
+        } catch (err) {
+            console.log(err)
+
+            return handlerInput.responseBuilder
+                .speak('Something went wrong. Please try again')
+                .getResponse()
+        }
     }
 }
 
