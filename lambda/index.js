@@ -29,8 +29,8 @@ const MakeBobaIntentHandler = {
     },
     handle(handlerInput) {
         console.log(handlerInput)
-        const { requestEnvelope } = handlerInput
-        const { intent } = requestEnvelope
+        const requestEnvelope = handlerInput.request
+        const intent = requestEnvelope.intent
         console.log(intent)
         const tea = intent.slots.tea.value
         const sugar = intent.slots.sugar.value
