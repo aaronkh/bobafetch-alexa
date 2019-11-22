@@ -44,7 +44,7 @@ const MakeBobaIntentHandler = {
         }
 
         try {
-            const body = await rp({
+            await rp({
                 method: 'POST',
                 uri: `${url}/queue`,
                 body: body,
@@ -52,8 +52,6 @@ const MakeBobaIntentHandler = {
             })
 
             const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
-
-            console.log(body)
 
             return handlerInput.responseBuilder
                 .speak(speakOutput)
