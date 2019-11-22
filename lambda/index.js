@@ -1,5 +1,5 @@
 const Alexa = require('ask-sdk-core')
-const request = require('request')
+const rp = require('request-promise-native')
 const url = 'http://35.230.20.197:5000'
 
 const LaunchRequestHandler = {
@@ -43,18 +43,24 @@ const MakeBobaIntentHandler = {
             }
         }
 
-        request({ method: 'POST', uri: url, body: body, json: true }, function(
-            err,
-            res,
-            body
-        ) {
-            const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+        rp({ method: 'POST', uri: `${url}/queue`, body: body, json: true })
+            .then(body => {
+                const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
 
-            return handlerInput.responseBuilder
-                .speak(speakOutput)
-                .withSimpleCard('Title', 'Content')
-                .getResponse()
-        })
+                console.log(body)
+
+                return handlerInput.responseBuilder
+                    .speak(speakOutput)
+                    .withSimpleCard('Title', 'Content')
+                    .getResponse()
+            })
+            .catch(err => {
+                console.log(err)
+
+                return handlerInput.responseBuilder
+                    .speak('Something went wrong. Please try again')
+                    .getResponse()
+            })
     }
 }
 
