@@ -46,8 +46,10 @@ const MakeBobaIntentHandler = {
         request({ method: 'POST', uri: url, body: body, json: true }, function(
             err,
             res,
-            body
+            b
         ) {
+            if(err) console.log(err)
+            console.log(b)
             const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
 
             return handlerInput.responseBuilder
