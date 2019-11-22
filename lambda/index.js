@@ -38,7 +38,7 @@ const MakeBobaIntentHandler = {
         return (
             handlerInput.responseBuilder
                 .speak(speakOutput)
-                // .withSimpleCard('Title', 'Content')
+                .withSimpleCard('Title', 'Content')
                 .getResponse()
         )
     }
