@@ -1,0 +1,347 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "boba maker",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": [
+            "nothing",
+            "nevermind",
+            "none"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "MakeBobaIntent",
+          "slots": [
+            {
+              "name": "tea",
+              "type": "teas",
+              "samples": [
+                "{tea}"
+              ]
+            },
+            {
+              "name": "sugar",
+              "type": "AMAZON.NUMBER",
+              "samples": [
+                "{sugar} percent",
+                "{sugar}"
+              ]
+            },
+            {
+              "name": "ice",
+              "type": "AMAZON.NUMBER",
+              "samples": [
+                "{ice}",
+                "{ice} percent"
+              ]
+            }
+          ],
+          "samples": [
+            "{tea}",
+            "{tea} with {sugar} {ice}",
+            "boba make {tea} with {sugar} {ice} ",
+            "milk tea",
+            "tea",
+            "boba tea",
+            "pearl tea",
+            "pearl milk tea",
+            "boba make",
+            "make boba",
+            "boba",
+            "bubble milk tea",
+            "make bubble milk tea",
+            "hello",
+            "how are you",
+            "say hi world",
+            "say hi",
+            "hi",
+            "say hello world",
+            "say hello"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.MoreIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateSettingsIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NextIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PageUpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PageDownIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PreviousIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollRightIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollDownIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollLeftIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ScrollUpIntent",
+          "samples": []
+        },
+        {
+          "name": "GetQueue",
+          "slots": [],
+          "samples": [
+            "When is my boba coming",
+            "How long until my order",
+            "When is my order finished",
+            "What position in the queue am I",
+            "Queue",
+            "What's the wait",
+            "How long is the wait"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "oolong",
+                "synonyms": [
+                  "oolong tea",
+                  "oolong milk tea"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "black",
+                "synonyms": [
+                  "signature tea",
+                  "classic tea",
+                  "classic milk tea",
+                  "signature milk tea",
+                  "black milk tea",
+                  "black tea"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "jasmine",
+                "synonyms": [
+                  "jasmine tea",
+                  "jasmine green tea",
+                  "jasmine green milk tea",
+                  "jasmine milk tea"
+                ]
+              }
+            }
+          ],
+          "name": "teas"
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "MakeBobaIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "tea",
+              "type": "teas",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.1407051674348.1260795873016"
+              },
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.96696500119.1305474855625.82020771369",
+                  "values": [
+                    "signature milk tea",
+                    "oolong",
+                    "classic milk tea",
+                    "signature",
+                    "oolong milk tea",
+                    "black",
+                    "jasmine green milk tea",
+                    "signature tea",
+                    "oolong tea",
+                    "jasmine",
+                    "black milk tea",
+                    "jasmine green tea",
+                    "classic",
+                    "jasmine milk tea",
+                    "jasmine tea",
+                    "classic tea",
+                    "black tea"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "sugar",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.1407051674348.1380188685902"
+              },
+              "validations": [
+                {
+                  "type": "isLessThanOrEqualTo",
+                  "prompt": "Slot.Validation.96696500119.1297174672037.700970194854",
+                  "value": "200"
+                },
+                {
+                  "type": "isGreaterThanOrEqualTo",
+                  "prompt": "Slot.Validation.96696500119.1297174672037.1385382322856",
+                  "value": "0"
+                }
+              ]
+            },
+            {
+              "name": "ice",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.1407051674348.659776241016"
+              },
+              "validations": [
+                {
+                  "type": "isLessThanOrEqualTo",
+                  "prompt": "Slot.Validation.96696500119.1531575619521.712383353911",
+                  "value": "200"
+                },
+                {
+                  "type": "isGreaterThanOrEqualTo",
+                  "prompt": "Slot.Validation.96696500119.1531575619521.74375266834",
+                  "value": "0"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.1407051674348.1260795873016",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "What tea do you fancy?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What tea would you like?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1407051674348.1380188685902",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "What sugar level?"
+          },
+          {
+            "type": "PlainText",
+            "value": "How much sugar would you like?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1407051674348.659776241016",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "How much ice?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What ice level?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.96696500119.1305474855625.82020771369",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Hmm, we don't have {tea} . We only have jasmine, black, and oolong milk tea. Which one of those would you like?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.96696500119.1297174672037.700970194854",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "{sugar} is really really sweet. Try a value less than two hundred percent sweetness."
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.96696500119.1297174672037.1385382322856",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "I don't think we can have negative sugar. Try a positive number."
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.96696500119.1531575619521.712383353911",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "That's too much ice. Try a lower number. "
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.96696500119.1531575619521.74375266834",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "From my calculations, we don't have antimatter yet. Try a higher number."
+          }
+        ]
+      }
+    ]
+  },
+  "version": "10"
+}
