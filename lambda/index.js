@@ -1,4 +1,4 @@
-const {Alexa, getSlotValue } = require('ask-sdk-core')
+const Alexa = require('ask-sdk-core')
 const request = require('request')
 
 const LaunchRequestHandler = {
@@ -30,10 +30,10 @@ const MakeBobaIntentHandler = {
     handle(handlerInput) {
         console.log(handlerInput)
         const requestEnvelope = handlerInput.requestEnvelope
-
-        const tea = getSlotValue(requestEnvelope, 'tea')
-        const sugar = getSlotValue(requestEnvelope, 'sugar')
-        const ice = getSlotValue(requestEnvelope, 'ice')
+        const intent = requestEnvelope.request.intent
+        const tea = intent.slots.tea.value
+        const sugar = intent.slots.sugar.value
+        const ice = intent.slots.ice.value
         const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming up.`
         return (
             handlerInput.responseBuilder
