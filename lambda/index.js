@@ -28,6 +28,7 @@ const MakeBobaIntentHandler = {
         )
     },
     handle(handlerInput) {
+        console.log(handlerInput)
         const { requestEnvelope } = handlerInput
         const { intent } = requestEnvelope
         console.log(intent)
