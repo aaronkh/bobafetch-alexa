@@ -29,6 +29,7 @@ const MakeBobaIntentHandler = {
         )
     },
     async handle(handlerInput) {
+        console.log(handlerInput)
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
         const tea = intent.slots.tea.value
