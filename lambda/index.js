@@ -52,7 +52,7 @@ const MakeBobaIntentHandler = {
                 json: true
             })
 
-            const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+            const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
 
             return handlerInput.responseBuilder
                 .speak(speakOutput)
