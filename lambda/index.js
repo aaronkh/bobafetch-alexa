@@ -201,11 +201,12 @@ exports.handler = Alexa.SkillBuilders.custom()
         MakeBobaIntentHandler,
         GetQueueIntentHandler,
         HelpIntentHandler,
+        GetLastDrinkIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
+    .addErrorHandlers(ErrorHandler)
     .withTableName("lastOrder") // stores customer orders in a table; see more at shorturl.at/DIUWX
     .withAutoCreateTable(true) // auto creates table if not exist
-    .addErrorHandlers(ErrorHandler)
     .lambda()
