@@ -78,6 +78,7 @@
             }
           ],
           "samples": [
+            "{create} {article} {Tea} {conjunction} {Ice} {percentNoun} {iceNoun} {and} {Sugar} {percentNoun} {sweetnessNoun}",
             "{create} {article} {Tea} {conjunction} {Sugar} {percentNoun} {sweetnessNoun} {and} {Ice} {percentNoun} {iceNoun}"
           ]
         },
@@ -519,5 +520,5 @@
       }
     ]
   },
-  "version": "26"
+  "version": "30"
 }

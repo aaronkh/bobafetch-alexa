@@ -53,6 +53,15 @@ const MakeBobaIntentHandler = {
             })
 
             const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+            
+            // saves ordered drinks
+            let persistentAttributes = {
+                profile: {
+                    lastDrink: `${tea} with ${sugar} percent sweetness and ${ice} percent ice`
+                }
+            }
+            handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+            handlerInput.attributesManager.savePersistentAttributes()
 
             return handlerInput.responseBuilder
                 .speak(speakOutput)
@@ -65,6 +74,23 @@ const MakeBobaIntentHandler = {
                 .speak('Something went wrong. Please try again')
                 .getResponse()
         }
+    }
+}
+
+const GetLastDrinkIntentHandler = {
+    canHandle(handlerInput) {
+        return (
+            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+                'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+                'GetLastDrinkIntent'
+        )
+    },
+    async handle(handlerInput) {
+        let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
+        let lastDrink = persistentAttributes.profile.lastDrink
+        const output = `Your last drink was a ${lastDrink}`
+        return handlerInput.speak(output).getResponse()
     }
 }
 
@@ -81,6 +107,7 @@ const GetQueueIntentHandler = {
         return handlerInput.speak('Queue').getResponse()
     }
 }
+
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return (
@@ -92,7 +119,6 @@ const HelpIntentHandler = {
     },
     handle(handlerInput) {
         const speakOutput = 'You can say hello to me! How can I help?'
-
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -126,7 +152,7 @@ const SessionEndedRequestHandler = {
     },
     handle(handlerInput) {
         // Any cleanup logic goes here.
-        return handlerInput.responseBuilder.getResponse()
+        return handlerInput.responseBuilder.speak('Session ended').getResponse()
     }
 }
 
