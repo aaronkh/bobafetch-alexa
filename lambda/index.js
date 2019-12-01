@@ -1,6 +1,12 @@
 const Alexa = require('ask-sdk-core')
 const rp = require('request-promise-native')
+const { DynamoDbPersistenceAdapter } = require('ask-sdk-dynamodb-persistence-adapter')
+
 const url = 'http://35.230.20.197:5000'
+const persistenceAdapter = new DynamoDbPersistenceAdapter({
+  tableName: 'LastDrinks',
+  createTable: true
+})
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -207,6 +213,5 @@ exports.handler = Alexa.SkillBuilders.custom()
         IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
     .addErrorHandlers(ErrorHandler)
-    .withTableName("lastOrder") // stores customer orders in a table; see more at shorturl.at/DIUWX
-    .withAutoCreateTable(true) // auto creates table if not exist
+    .withPersistenceAdapter(persistenceAdapter)
     .lambda()
