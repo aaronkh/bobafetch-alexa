@@ -32,9 +32,9 @@ const MakeBobaIntentHandler = {
         console.log(handlerInput)
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
-        const tea = intent.slots.tea.value
-        const sugar = intent.slots.sugar.value
-        const ice = intent.slots.ice.value
+        const tea = intent.slots.Tea.value
+        const sugar = intent.slots.Sugar.value
+        const ice = intent.slots.Ice.value
 
         const body = {
             options: {
@@ -52,7 +52,7 @@ const MakeBobaIntentHandler = {
                 json: true
             })
 
-            const speakOutput = `One ${tea} milk tea with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+            const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
 
             return handlerInput.responseBuilder
                 .speak(speakOutput)
@@ -179,5 +179,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         SessionEndedRequestHandler,
         IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
+    .withTableName("lastOrder") // stores customer orders in a table; see more at shorturl.at/DIUWX
+    .withAutoCreateTable(true) // auto creates table if not exist
     .addErrorHandlers(ErrorHandler)
     .lambda()

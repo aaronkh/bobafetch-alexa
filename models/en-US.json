@@ -23,55 +23,80 @@
           "name": "MakeBobaIntent",
           "slots": [
             {
-              "name": "tea",
-              "type": "teas",
+              "name": "Tea",
+              "type": "Tea",
               "samples": [
-                "{tea}"
+                "{create} {article} {Tea}",
+                "{Tea}"
               ]
             },
             {
-              "name": "sugar",
+              "name": "Sugar",
               "type": "AMAZON.NUMBER",
               "samples": [
-                "{sugar} percent",
-                "{sugar}"
+                "{create} {article} {Sugar} {percentNoun}",
+                "{Sugar} {percentNoun}",
+                "{Sugar}"
               ]
             },
             {
-              "name": "ice",
+              "name": "Ice",
               "type": "AMAZON.NUMBER",
               "samples": [
-                "{ice}",
-                "{ice} percent"
+                "{create} {article} {Ice} {percentNoun}",
+                "{Ice}",
+                "{Ice} {percentNoun}"
               ]
+            },
+            {
+              "name": "percentNoun",
+              "type": "percentNoun"
+            },
+            {
+              "name": "and",
+              "type": "and"
+            },
+            {
+              "name": "sweetnessNoun",
+              "type": "sweetnessNoun"
+            },
+            {
+              "name": "article",
+              "type": "article"
+            },
+            {
+              "name": "conjunction",
+              "type": "conjunction"
+            },
+            {
+              "name": "create",
+              "type": "create"
+            },
+            {
+              "name": "iceNoun",
+              "type": "iceNoun"
             }
           ],
           "samples": [
-            "{tea}",
-            "{tea} with {sugar} {ice}",
-            "boba make {tea} with {sugar} {ice} ",
-            "milk tea",
-            "tea",
-            "boba tea",
-            "pearl tea",
-            "pearl milk tea",
-            "boba make",
-            "make boba",
-            "boba",
-            "bubble milk tea",
-            "make bubble milk tea",
-            "hello",
-            "how are you",
-            "say hi world",
-            "say hi",
-            "hi",
-            "say hello world",
-            "say hello"
+            "{create} {article} {Tea} {conjunction} {Sugar} {percentNoun} {sweetnessNoun} {and} {Ice} {percentNoun} {iceNoun}"
           ]
         },
         {
           "name": "AMAZON.NavigateHomeIntent",
           "samples": []
+        },
+        {
+          "name": "GetQueue",
+          "slots": [],
+          "samples": [
+            "When is my boba coming",
+            "How long until my order",
+            "When is my order finished",
+            "What position in the queue am I",
+            "Queue",
+            "What's the wait",
+            "How long is the wait"
+          ]
         },
         {
           "name": "AMAZON.MoreIntent",
@@ -112,19 +137,6 @@
         {
           "name": "AMAZON.ScrollUpIntent",
           "samples": []
-        },
-        {
-          "name": "GetQueue",
-          "slots": [],
-          "samples": [
-            "When is my boba coming",
-            "How long until my order",
-            "When is my order finished",
-            "What position in the queue am I",
-            "Queue",
-            "What's the wait",
-            "How long is the wait"
-          ]
         }
       ],
       "types": [
@@ -164,7 +176,122 @@
               }
             }
           ],
-          "name": "teas"
+          "name": "Tea"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "sugar"
+              }
+            },
+            {
+              "name": {
+                "value": "sweetness"
+              }
+            }
+          ],
+          "name": "sweetnessNoun"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "percent"
+              }
+            }
+          ],
+          "name": "percentNoun"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "and"
+              }
+            }
+          ],
+          "name": "and"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "I want"
+              }
+            },
+            {
+              "name": {
+                "value": "boba make"
+              }
+            },
+            {
+              "name": {
+                "value": "brew"
+              }
+            },
+            {
+              "name": {
+                "value": "make"
+              }
+            },
+            {
+              "name": {
+                "value": "get me"
+              }
+            },
+            {
+              "name": {
+                "value": "make me"
+              }
+            },
+            {
+              "name": {
+                "value": "create"
+              }
+            }
+          ],
+          "name": "create"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "another"
+              }
+            },
+            {
+              "name": {
+                "value": "the"
+              }
+            },
+            {
+              "name": {
+                "value": "a"
+              }
+            }
+          ],
+          "name": "article"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "with"
+              }
+            }
+          ],
+          "name": "conjunction"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "ice"
+              }
+            }
+          ],
+          "name": "iceNoun"
         }
       ]
     },
@@ -176,8 +303,8 @@
           "prompts": {},
           "slots": [
             {
-              "name": "tea",
-              "type": "teas",
+              "name": "Tea",
+              "type": "Tea",
               "elicitationRequired": true,
               "confirmationRequired": false,
               "prompts": {
@@ -210,7 +337,7 @@
               ]
             },
             {
-              "name": "sugar",
+              "name": "Sugar",
               "type": "AMAZON.NUMBER",
               "elicitationRequired": true,
               "confirmationRequired": false,
@@ -231,7 +358,7 @@
               ]
             },
             {
-              "name": "ice",
+              "name": "Ice",
               "type": "AMAZON.NUMBER",
               "elicitationRequired": true,
               "confirmationRequired": false,
@@ -250,6 +377,55 @@
                   "value": "0"
                 }
               ]
+            },
+            {
+              "name": "percentNoun",
+              "type": "percentNoun",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "and",
+              "type": "and",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "sweetnessNoun",
+              "type": "sweetnessNoun",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "article",
+              "type": "article",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "conjunction",
+              "type": "conjunction",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "create",
+              "type": "create",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "iceNoun",
+              "type": "iceNoun",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
             }
           ]
         }
@@ -301,7 +477,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Hmm, we don't have {tea} . We only have jasmine, black, and oolong milk tea. Which one of those would you like?"
+            "value": "Hmm, we don't have {Tea} . We only have jasmine, black, and oolong milk tea. Which one of those would you like?"
           }
         ]
       },
@@ -310,7 +486,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "{sugar} is really really sweet. Try a value less than two hundred percent sweetness."
+            "value": "{Sugar} is really really sweet. Try a value less than two hundred percent sweetness."
           }
         ]
       },
@@ -343,5 +519,5 @@
       }
     ]
   },
-  "version": "16"
+  "version": "26"
 }
