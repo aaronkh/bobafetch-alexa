@@ -9,6 +9,9 @@
           {
             "type": "RENDER_TEMPLATE",
             "minimumTemplateVersion": "1.0"
+          },
+          {
+            "type": "CUSTOM_INTERFACE"
           }
         ]
       }
@@ -24,12 +27,40 @@
         "name": "alexa::person_id:read"
       }
     ],
+    "privacyAndCompliance": {
+      "locales": {
+        "en-US": {}
+      }
+    },
     "publishingInformation": {
       "locales": {
         "en-US": {
-          "name": "Boba Maker"
+          "name": "Boba Maker",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/ac52/b8d1627793704177b4e87dbb8cf6e4c1/APP_ICON?versionId=nNdC3ICZEIhFhPZyEs2rPpDwKmThKv9X&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191201T043844Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191201%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=7d52c88f0f1a01efcecda1781a950830e510c78c28553758e21e12add1c20a2b",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/d9b2/62b018fd3d084e9f9142e408a1073136/APP_ICON_LARGE?versionId=C8vKGhmm5WCFgXtZbexwSMROouV_Wzxd&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191201T043844Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191201%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=de072943e174d17060670f9d3fafc9ed3c3fb132775618ebb243f1323c139205",
+          "summary": "Fresh boba milk tea with the sound of your voice",
+          "description": "Fresh boba milk tea with the sound of your voice",
+          "examplePhrases": [
+            "Alexa, tell Boba Maker to make a classic milk tea with 50 percent ice and 50 percent sugar",
+            "",
+            ""
+          ],
+          "keywords": [
+            "Tea",
+            "Drink",
+            "Boba",
+            "Maker",
+            "Subtle",
+            "Asian",
+            "Traits",
+            "Lego",
+            "Mindstorms"
+          ]
         }
-      }
+      },
+      "isAvailableWorldwide": true,
+      "category": "WINE_AND_BEVERAGE",
+      "distributionCountries": []
     }
   }
 }
