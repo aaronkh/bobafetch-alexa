@@ -138,6 +138,14 @@
         {
           "name": "AMAZON.ScrollUpIntent",
           "samples": []
+        },
+        {
+          "name": "GetLastDrink",
+          "slots": [],
+          "samples": [
+            "last drink",
+            "what was my last drink"
+          ]
         }
       ],
       "types": [
@@ -520,5 +528,5 @@
       }
     ]
   },
-  "version": "30"
+  "version": "32"
 }
