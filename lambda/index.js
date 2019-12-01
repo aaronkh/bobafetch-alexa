@@ -179,7 +179,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         SessionEndedRequestHandler,
         IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
-    // .withTableName("lastOrder") // stores customer orders in a table; see more at shorturl.at/DIUWX
-    // .withAutoCreateTable(true) // auto creates table if not exist
+    .withTableName("lastOrder") // stores customer orders in a table; see more at shorturl.at/DIUWX
+    .withAutoCreateTable(true) // auto creates table if not exist
     .addErrorHandlers(ErrorHandler)
     .lambda()
