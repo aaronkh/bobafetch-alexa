@@ -8,8 +8,8 @@
         "name": "Boba Tea",
         "summary": "Your Favorite Drink",
         "description": "Bubble tea (also known as pearl milk tea, bubble milk tea, or boba) (Chinese: 珍珠奶茶; pinyin: zhēnzhū nǎichá, 波霸奶茶; bōbà nǎichá) is a Taiwanese tea-based drink invented in Tainan and Taichung in the 1980s.",
-        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/bc15/537c74f6d3d4474db85af2a417c85ce5/APP_ICON?versionId=UX5yUjaIsi6mEavsQhF4w4SItEITWLzd&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T075127Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=3249782ca33c6100fd2735baed7140c0c935c0d19b223067493eaa9ca85f6a03",
-        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6db5/4f3aa16ce20d44978fe6490b2be1025e/APP_ICON_LARGE?versionId=0mQqmNbTlgx54_kPncYM6NbCuiTOP4AF&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T075127Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c14be25fd1b8c11afbfeee707eac0c0f73f7011f7f9614ea114eb5c8103172c3",
+        "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/bc15/537c74f6d3d4474db85af2a417c85ce5/APP_ICON?versionId=UX5yUjaIsi6mEavsQhF4w4SItEITWLzd&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T080626Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=5f6ad31f29440866c35d0ca0821c2ce647eb545bdf073cadcabd4cd878cdf99c",
+        "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6db5/4f3aa16ce20d44978fe6490b2be1025e/APP_ICON_LARGE?versionId=0mQqmNbTlgx54_kPncYM6NbCuiTOP4AF&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T080626Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=07f939b7c33e382e5efdf189f076210f90e0445e5f7924a8143110014e9b9a2f",
         "examplePhrases": [
           "For Future Use – Example Phrase 1",
           "For Future Use – Example Phrase 2",
