@@ -87,7 +87,7 @@
           "samples": []
         },
         {
-          "name": "GetQueue",
+          "name": "GetQueueIntent",
           "slots": [],
           "samples": [
             "When is my boba coming",
@@ -140,7 +140,7 @@
           "samples": []
         },
         {
-          "name": "GetLastDrink",
+          "name": "GetLastDrinkIntent",
           "slots": [],
           "samples": [
             "last drink",
@@ -437,6 +437,12 @@
               "prompts": {}
             }
           ]
+        },
+        {
+          "name": "GetLastDrinkIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": []
         }
       ],
       "delegationStrategy": "ALWAYS"
@@ -528,5 +534,5 @@
       }
     ]
   },
-  "version": "32"
+  "version": "39"
 }
