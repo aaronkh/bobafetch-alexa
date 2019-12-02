@@ -2,10 +2,34 @@ const Alexa = require('ask-sdk-core')
 const rp = require('request-promise-native')
 const persistence = require('ask-sdk-s3-persistence-adapter')
 
+const YES_SESSION_STATE = 'YES_STATE'
+const YES_INTENTS = {
+    LAST_DRINK_CONFIRMATION: 'LAST_DRINK_CONFIRMATION'
+}
 const url = 'http://35.230.20.197:5000'
 const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
 })
+
+const createDrink = async (tea, sugar, ice) => {
+    try {
+        const body = {
+            options: {
+                tea: tea,
+                sugar: parseInt(sugar),
+                ice: parseInt(ice)
+            }
+        }
+        await rp({
+            method: 'POST',
+            uri: `${url}/queue`,
+            body: body,
+            json: true
+        })
+    } catch (e) {
+        throw new Error(e)
+    }
+}
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -41,30 +65,20 @@ const MakeBobaIntentHandler = {
         const sugar = intent.slots.Sugar.value
         const ice = intent.slots.Ice.value
 
-        const body = {
-            options: {
-                tea: tea,
-                sugar: parseInt(sugar),
-                ice: parseInt(ice)
-            }
-        }
-
         try {
-            await rp({
-                method: 'POST',
-                uri: `${url}/queue`,
-                body: body,
-                json: true
-            })
+            await createDrink(tea, sugar, ice)
 
             const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+            let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
 
             // saves ordered drinks
-            let persistentAttributes = {
-                profile: {
-                    lastDrink: `${tea} with ${sugar} percent sweetness and ${ice} percent ice`
-                }
+            const lastDrink = {
+                string: `${tea} with ${sugar} percent sweetness and ${ice} percent ice`,
+                tea: tea, 
+                ice: ice,
+                sugar: sugar
             }
+            persistentAttributes.lastDrink = lastDrink
             handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
             handlerInput.attributesManager.savePersistentAttributes()
 
@@ -93,9 +107,15 @@ const GetLastDrinkIntentHandler = {
     },
     async handle(handlerInput) {
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
-        if ('profile' in persistentAttributes && 'lastDrink' in persistentAttributes.profile) {
-            let lastDrink = persistentAttributes.profile.lastDrink
-            const output = `Your last drink was a ${lastDrink}`
+
+        if ('lastDrink' in persistentAttributes) {
+            let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
+            sessionAttributes.yesIntent = YES_INTENTS.LAST_DRINK_CONFIRMATION
+            sessionAttributes.state = YES_SESSION_STATE
+            handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+
+            let lastDrinkString = persistentAttributes.lastDrink.string
+            const output = `Your last drink was a ${lastDrinkString}. Would you like to order it again?`
             return handlerInput.responseBuilder.speak(output).getResponse()
         } else {
             const output = `You haven't made any orders yet. Try asking for a classic milk tea!`
@@ -115,6 +135,39 @@ const GetQueueIntentHandler = {
     },
     handle(handlerInput) {
         return handlerInput.responseBuilder.speak('Queue').getResponse()
+    }
+}
+
+const YesIntentHandler = {
+    canHandle(handlerInput) {
+        const attributes = handlerInput.attributesManager.getSessionAttributes()
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
+            && attributes.state === YES_SESSION_STATE
+    },
+    async handle(handlerInput) {
+        let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
+        let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
+        let yesIntent = sessionAttributes.yesIntent
+        switch (yesIntent) {
+            case yesIntent:
+                try{
+                    let drinkObject = persistentAttributes.lastDrink
+                    await createDrink(drinkObject.tea, drinkObject.sugar. drinkObject.ice)
+                    let drinkString = persistentAttributes.lastDrink.string
+                    return handlerInput.responseBuilder.speak(`Okay, one ${drinkString} coming right up`).getResponse()
+                } catch(e) {
+                    console.log(e)
+                    return handlerInput.responseBuilder
+                        .speak(`Sorry, there was an error getting that drink. Please try again later.`)
+                        .getResponse()
+                }
+        }
+        //write your logic 
+
+        return handlerInput.responseBuilder
+            .speak('Cool!')
+            .getResponse()
     }
 }
 
