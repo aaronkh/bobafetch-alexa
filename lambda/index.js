@@ -3,7 +3,7 @@ const rp = require('request-promise-native')
 const persistence = require('ask-sdk-s3-persistence-adapter')
 
 const url = 'http://35.230.20.197:5000'
-const persistenceAdapter =  new persistence.S3PersistenceAdapter({
+const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
 })
 
@@ -28,9 +28,9 @@ const MakeBobaIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
-                'IntentRequest' &&
+            'IntentRequest' &&
             Alexa.getIntentName(handlerInput.requestEnvelope) ===
-                'MakeBobaIntent'
+            'MakeBobaIntent'
         )
     },
     async handle(handlerInput) {
@@ -58,7 +58,7 @@ const MakeBobaIntentHandler = {
             })
 
             const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
-            
+
             // saves ordered drinks
             let persistentAttributes = {
                 profile: {
@@ -86,16 +86,21 @@ const GetLastDrinkIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
-                'IntentRequest' &&
+            'IntentRequest' &&
             Alexa.getIntentName(handlerInput.requestEnvelope) ===
-                'GetLastDrinkIntent'
+            'GetLastDrinkIntent'
         )
     },
     async handle(handlerInput) {
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
-        let lastDrink = persistentAttributes.profile.lastDrink
-        const output = `Your last drink was a ${lastDrink}`
-        return handlerInput.responseBuilder.speak(output).getResponse()
+        if ('profile' in persistentAttributes && 'lastDrink' in persistentAttributes.profile) {
+            let lastDrink = persistentAttributes.profile.lastDrink
+            const output = `Your last drink was a ${lastDrink}`
+            return handlerInput.responseBuilder.speak(output).getResponse()
+        } else {
+            const output = `You haven't made any orders yet. Try asking for a classic milk tea!`
+            return handlerInput.responseBuilder.speak(output).getResponse()
+        }
     }
 }
 
@@ -103,9 +108,9 @@ const GetQueueIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
-                'IntentRequest' &&
+            'IntentRequest' &&
             Alexa.getIntentName(handlerInput.requestEnvelope) ===
-                'GetQueueIntent'
+            'GetQueueIntent'
         )
     },
     handle(handlerInput) {
@@ -117,13 +122,13 @@ const HelpIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
-                'IntentRequest' &&
+            'IntentRequest' &&
             Alexa.getIntentName(handlerInput.requestEnvelope) ===
-                'AMAZON.HelpIntent'
+            'AMAZON.HelpIntent'
         )
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say hello to me! How can I help?'
+        const speakOutput = 'Try asking for a classic milk tea!'
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -135,11 +140,11 @@ const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
-                'IntentRequest' &&
+            'IntentRequest' &&
             (Alexa.getIntentName(handlerInput.requestEnvelope) ===
                 'AMAZON.CancelIntent' ||
                 Alexa.getIntentName(handlerInput.requestEnvelope) ===
-                    'AMAZON.StopIntent')
+                'AMAZON.StopIntent')
         )
     },
     handle(handlerInput) {
