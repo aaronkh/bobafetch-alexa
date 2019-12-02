@@ -1,11 +1,10 @@
 const Alexa = require('ask-sdk-core')
 const rp = require('request-promise-native')
-const { DynamoDbPersistenceAdapter } = require('ask-sdk-dynamodb-persistence-adapter')
+const persistence = require('ask-sdk-s3-persistence-adapter')
 
 const url = 'http://35.230.20.197:5000'
-const persistenceAdapter = new DynamoDbPersistenceAdapter({
-  tableName: 'LastDrinks',
-  createTable: true
+const persistenceAdapter =  new persistence.S3PersistenceAdapter({
+    bucketName: process.env.S3_PERSISTENCE_BUCKET
 })
 
 const LaunchRequestHandler = {
