@@ -95,7 +95,7 @@ const GetLastDrinkIntentHandler = {
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
         let lastDrink = persistentAttributes.profile.lastDrink
         const output = `Your last drink was a ${lastDrink}`
-        return handlerInput.speak(output).getResponse()
+        return handlerInput.responseBuilder.speak(output).getResponse()
     }
 }
 
@@ -109,7 +109,7 @@ const GetQueueIntentHandler = {
         )
     },
     handle(handlerInput) {
-        return handlerInput.speak('Queue').getResponse()
+        return handlerInput.responseBuilder.speak('Queue').getResponse()
     }
 }
 
