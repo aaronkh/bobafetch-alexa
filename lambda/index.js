@@ -116,7 +116,11 @@ const GetLastDrinkIntentHandler = {
 
             let lastDrinkString = persistentAttributes.lastDrink.string
             const output = `Your last drink was a ${lastDrinkString}. Would you like to order it again?`
-            return handlerInput.responseBuilder.speak(output).getResponse()
+            return handlerInput.responseBuilder
+                .speak(output)
+                .reprompt(output)
+                .getResponse()
+                .withShouldEndSession(false)
         } else {
             const output = `You haven't made any orders yet. Try asking for a classic milk tea!`
             return handlerInput.responseBuilder.speak(output).getResponse()
@@ -170,6 +174,21 @@ const YesIntentHandler = {
             .getResponse()
     }
 }
+
+const NoIntentHandler = {
+    canHandle(handlerInput) {
+        const attributes = handlerInput.attributesManager.getSessionAttributes()
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent'
+            && attributes.state === YES_SESSION_STATE // expecting a yes/no question
+    },
+    async handle(handlerInput) {
+        return handlerInput.responseBuilder // clears sessions as well
+            .speak('Okay.')
+            .getResponse()
+    }
+}
+
 
 const HelpIntentHandler = {
     canHandle(handlerInput) {
@@ -261,6 +280,8 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        YesIntentHandler,
+        NoIntentHandler,
         MakeBobaIntentHandler,
         GetQueueIntentHandler,
         HelpIntentHandler,
