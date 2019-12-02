@@ -1,16 +1,8 @@
 const Alexa = require('ask-sdk-core')
 const persistence = require('ask-sdk-s3-persistence-adapter')
 
-import {
-    createDrink,
-    YES_INTENTS} from './common.js'
-import {
-    LaunchRequestHandler, 
-    YesIntentHandler, 
-    NoIntentHandler, 
-    CancelAndStopIntentHandler, 
-    HelpIntentHandler} from './builtin-intents.js'
-
+const common = require('./common.js')
+const BuiltinIntents = require('./builtin-intents.js')
 
 const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
@@ -34,7 +26,7 @@ const MakeBobaIntentHandler = {
         const ice = intent.slots.Ice.value
 
         try {
-            await createDrink(tea, sugar, ice)
+            await common.createDrink(tea, sugar, ice)
 
             const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
             let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
@@ -105,7 +97,7 @@ const GetLastDrinkIntentHandler = {
 
         if ('lastDrink' in persistentAttributes) {
             let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
-            sessionAttributes.yesIntent = YES_INTENTS.LAST_DRINK_CONFIRMATION
+            sessionAttributes.yesIntent = common.YES_INTENTS.LAST_DRINK_CONFIRMATION
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
 
             let lastDrinkString = persistentAttributes.lastDrink.string
@@ -190,15 +182,15 @@ const ErrorHandler = {
 
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
-        LaunchRequestHandler,
+        BuiltinIntents.LaunchRequestHandler,
         TogglePurchasingIntent,
-        YesIntentHandler,
-        NoIntentHandler,
+        BuiltinIntents.YesIntentHandler,
+        BuiltinIntents.NoIntentHandler,
         MakeBobaIntentHandler,
         GetQueueIntentHandler,
-        HelpIntentHandler,
+        BuiltinIntents.HelpIntentHandler,
         GetLastDrinkIntentHandler,
-        CancelAndStopIntentHandler,
+        BuiltinIntents.CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
