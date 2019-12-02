@@ -154,8 +154,8 @@ const YesIntentHandler = {
         switch (yesIntent) {
             case YES_INTENTS.LAST_DRINK_CONFIRMATION:
                 try{
-                    if('lastDrink' in persistentAttributes) console.log('lastDrink is ' + JSON.stringify(persistentAttributes.lastDrink))
                     let drinkObject = persistentAttributes.lastDrink
+                    console.log('lastDrink is ' + JSON.stringify(drinkObject))
                     await createDrink(drinkObject.tea, drinkObject.sugar. drinkObject.ice)
                     let drinkString = persistentAttributes.lastDrink.string
                     return handlerInput.responseBuilder.speak(`Okay, one ${drinkString} coming right up`).getResponse()
