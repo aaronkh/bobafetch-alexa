@@ -1,7 +1,5 @@
 const Alexa = require('ask-sdk-core')
-import {
-    createDrink,
-    YES_INTENTS} from './common.js'
+const common = require('./common.js')
 
 exports.YesIntentHandler = {
     canHandle(handlerInput) {
@@ -13,10 +11,10 @@ exports.YesIntentHandler = {
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
         let yesIntent = sessionAttributes.yesIntent
         switch (yesIntent) {
-            case YES_INTENTS.LAST_DRINK_CONFIRMATION:
+            case common.YES_INTENTS.LAST_DRINK_CONFIRMATION:
                 try{
                     let drinkObject = persistentAttributes.lastDrink
-                    await createDrink(drinkObject.tea, drinkObject.sugar, drinkObject.ice)
+                    await common.createDrink(drinkObject.tea, drinkObject.sugar, drinkObject.ice)
                     let drinkString = persistentAttributes.lastDrink.string
                     return handlerInput.responseBuilder.speak(`Okay, one ${drinkString} coming right up`).getResponse()
                 } catch(e) {
