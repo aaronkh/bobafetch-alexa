@@ -146,6 +146,14 @@
             "last drink",
             "what was my last drink"
           ]
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
         }
       ],
       "types": [
@@ -534,5 +542,5 @@
       }
     ]
   },
-  "version": "39"
+  "version": "49"
 }

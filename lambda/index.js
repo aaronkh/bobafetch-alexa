@@ -152,7 +152,7 @@ const YesIntentHandler = {
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
         let yesIntent = sessionAttributes.yesIntent
         switch (yesIntent) {
-            case yesIntent:
+            case YES_INTENTS.LAST_DRINK_CONFIRMATION:
                 try{
                     let drinkObject = persistentAttributes.lastDrink
                     await createDrink(drinkObject.tea, drinkObject.sugar. drinkObject.ice)
