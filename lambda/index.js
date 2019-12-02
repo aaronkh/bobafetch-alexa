@@ -1,58 +1,20 @@
 const Alexa = require('ask-sdk-core')
-const rp = require('request-promise-native')
 const persistence = require('ask-sdk-s3-persistence-adapter')
 
-const YES_SESSION_STATE = 'YES_STATE'
-const YES_INTENTS = {
-    LAST_DRINK_CONFIRMATION: 'LAST_DRINK_CONFIRMATION'
-}
-const url = 'http://35.230.20.197:5000'
+import {
+    createDrink,
+    YES_INTENTS} from './common.js'
+import {
+    LaunchRequestHandler, 
+    YesIntentHandler, 
+    NoIntentHandler, 
+    CancelAndStopIntentHandler, 
+    HelpIntentHandler} from './builtin-intents.js'
+
+
 const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
 })
-
-const createDrink = async (tea, sugar, ice) => {
-    console.log('create drink called with ' + `${tea} ${sugar} ${ice}`)
-    try {
-        const body = {
-            options: {
-                tea: tea,
-                sugar: parseInt(sugar),
-                ice: parseInt(ice)
-            }
-        }
-        await rp({
-            method: 'POST',
-            uri: `${url}/queue`,
-            body: body,
-            json: true
-        })
-    } catch (e) {
-        throw new Error(e)
-    }
-}
-
-const getIsPurchasing = async (handlerInput) => {
-    let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
-    return persistentAttributes.isPurchasing === true
-}
-
-const LaunchRequestHandler = {
-    canHandle(handlerInput) {
-        return (
-            Alexa.getRequestType(handlerInput.requestEnvelope) ===
-            'LaunchRequest'
-        )
-    },
-    handle(handlerInput) {
-        const speakOutput =
-            'Ready for all your boba making needs. Let me know if you need any help'
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
-            .getResponse()
-    }
-}
 
 const MakeBobaIntentHandler = {
     canHandle(handlerInput) {
@@ -144,7 +106,6 @@ const GetLastDrinkIntentHandler = {
         if ('lastDrink' in persistentAttributes) {
             let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
             sessionAttributes.yesIntent = YES_INTENTS.LAST_DRINK_CONFIRMATION
-            sessionAttributes.state = YES_SESSION_STATE
             handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
 
             let lastDrinkString = persistentAttributes.lastDrink.string
@@ -172,86 +133,6 @@ const GetQueueIntentHandler = {
     },
     handle(handlerInput) {
         return handlerInput.responseBuilder.speak('Queue').getResponse()
-    }
-}
-
-const YesIntentHandler = {
-    canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
-    },
-    async handle(handlerInput) {
-        let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
-        let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
-        let yesIntent = sessionAttributes.yesIntent
-        switch (yesIntent) {
-            case YES_INTENTS.LAST_DRINK_CONFIRMATION:
-                try{
-                    let drinkObject = persistentAttributes.lastDrink
-                    await createDrink(drinkObject.tea, drinkObject.sugar, drinkObject.ice)
-                    let drinkString = persistentAttributes.lastDrink.string
-                    return handlerInput.responseBuilder.speak(`Okay, one ${drinkString} coming right up`).getResponse()
-                } catch(e) {
-                    console.log(e)
-                    return handlerInput.responseBuilder
-                        .speak(`Sorry, there was an error getting that drink. Please try again later.`)
-                        .getResponse()
-                }
-        }
-
-        return handlerInput.responseBuilder
-            .speak('Cool!')
-            .getResponse()
-    }
-}
-
-const NoIntentHandler = {
-    canHandle(handlerInput) {
-        // const attributes = handlerInput.attributesManager.getSessionAttributes()
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent'
-            // && attributes.state === YES_SESSION_STATE // expecting a yes/no question
-    },
-    async handle(handlerInput) {
-        return handlerInput.responseBuilder // clears sessions as well
-            .speak('Okay.')
-            .getResponse()
-    }
-}
-
-
-const HelpIntentHandler = {
-    canHandle(handlerInput) {
-        return (
-            Alexa.getRequestType(handlerInput.requestEnvelope) ===
-            'IntentRequest' &&
-            Alexa.getIntentName(handlerInput.requestEnvelope) ===
-            'AMAZON.HelpIntent'
-        )
-    },
-    handle(handlerInput) {
-        const speakOutput = 'Try asking for a classic milk tea!'
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
-            .getResponse()
-    }
-}
-
-const CancelAndStopIntentHandler = {
-    canHandle(handlerInput) {
-        return (
-            Alexa.getRequestType(handlerInput.requestEnvelope) ===
-            'IntentRequest' &&
-            (Alexa.getIntentName(handlerInput.requestEnvelope) ===
-                'AMAZON.CancelIntent' ||
-                Alexa.getIntentName(handlerInput.requestEnvelope) ===
-                'AMAZON.StopIntent')
-        )
-    },
-    handle(handlerInput) {
-        const speakOutput = 'Goodbye!'
-        return handlerInput.responseBuilder.speak(speakOutput).getResponse()
     }
 }
 

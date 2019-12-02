@@ -16,5 +16,8 @@
     "aws-sdk": "^2.326.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2"
   }
 }
