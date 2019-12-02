@@ -141,8 +141,19 @@
         },
         {
           "name": "GetLastDrinkIntent",
-          "slots": [],
+          "slots": [
+            {
+              "name": "create",
+              "type": "create"
+            },
+            {
+              "name": "article",
+              "type": "article"
+            }
+          ],
           "samples": [
+            "repeat {article} my order",
+            "{create} {article} last drink",
             "last drink",
             "what was my last drink"
           ]
@@ -154,6 +165,19 @@
         {
           "name": "AMAZON.NoIntent",
           "samples": []
+        },
+        {
+          "name": "TogglePurchasingIntent",
+          "slots": [
+            {
+              "name": "OnOff",
+              "type": "OnOff"
+            }
+          ],
+          "samples": [
+            "TPI {OnOff}",
+            "Turn {OnOff} purchasing"
+          ]
         }
       ],
       "types": [
@@ -274,6 +298,11 @@
           "values": [
             {
               "name": {
+                "value": "my"
+              }
+            },
+            {
+              "name": {
                 "value": "another"
               }
             },
@@ -309,6 +338,21 @@
             }
           ],
           "name": "iceNoun"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "off"
+              }
+            },
+            {
+              "name": {
+                "value": "on"
+              }
+            }
+          ],
+          "name": "OnOff"
         }
       ]
     },
@@ -450,7 +494,22 @@
           "name": "GetLastDrinkIntent",
           "confirmationRequired": false,
           "prompts": {},
-          "slots": []
+          "slots": [
+            {
+              "name": "create",
+              "type": "create",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "article",
+              "type": "article",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
         }
       ],
       "delegationStrategy": "ALWAYS"
@@ -542,5 +601,5 @@
       }
     ]
   },
-  "version": "49"
+  "version": "59"
 }

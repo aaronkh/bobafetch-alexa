@@ -36,8 +36,8 @@
       "locales": {
         "en-US": {
           "name": "Boba Maker",
-          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/ac52/b8d1627793704177b4e87dbb8cf6e4c1/APP_ICON?versionId=nNdC3ICZEIhFhPZyEs2rPpDwKmThKv9X&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T083930Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=db75cc1f94f87e276f6fd44ccb00bcfe08fea2f1dfc6bf29efa250b99269b330",
-          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/d9b2/62b018fd3d084e9f9142e408a1073136/APP_ICON_LARGE?versionId=C8vKGhmm5WCFgXtZbexwSMROouV_Wzxd&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T083930Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=cce76c563d42a6ef427c6c08512055d6c6e396c4e50ad2b75199d04a381fb9c0",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/ac52/b8d1627793704177b4e87dbb8cf6e4c1/APP_ICON?versionId=nNdC3ICZEIhFhPZyEs2rPpDwKmThKv9X&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T095657Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=0ffa578848897e654568a767cd0e291526b151181f92668197537c655f83d2f1",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/d9b2/62b018fd3d084e9f9142e408a1073136/APP_ICON_LARGE?versionId=C8vKGhmm5WCFgXtZbexwSMROouV_Wzxd&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20191202T095657Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAJFEYRBGIHK2BBYKA%2F20191202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=d943eff597d7e8f0cfcc0b0c652cdb6fcbebccf563904cdb86e4fc8916062d87",
           "summary": "Fresh boba milk tea with the sound of your voice",
           "description": "Fresh boba milk tea with the sound of your voice",
           "examplePhrases": [

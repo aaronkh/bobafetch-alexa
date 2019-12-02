@@ -32,6 +32,11 @@ const createDrink = async (tea, sugar, ice) => {
     }
 }
 
+const getIsPurchasing = async (handlerInput) => {
+    let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
+    return persistentAttributes.isPurchasing === true
+}
+
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return (
@@ -94,6 +99,33 @@ const MakeBobaIntentHandler = {
                 .speak('Something went wrong. Please try again')
                 .getResponse()
         }
+    }
+}
+
+const TogglePurchasingIntent = {
+    canHandle(handlerInput) {
+        return (
+            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+            'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+            'TogglePurchasingIntent'
+        )
+    }, 
+    async handle(handlerInput) {
+        const requestEnvelope = handlerInput.requestEnvelope
+        const intent = requestEnvelope.request.intent
+        const toggle = intent.slots.OnOff.value
+
+        let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
+        
+        // saves ordered drinks
+        persistentAttributes.isPurchasing = toggle.toLowerCase() === 'on'
+        handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+        handlerInput.attributesManager.savePersistentAttributes()
+
+        return handlerInput.responseBuilder
+            .speak(`Purchasing set to ${toggle.toLowerCase() === 'on'}`)
+            .getResponse()
     }
 }
 
@@ -278,6 +310,7 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
+        TogglePurchasingIntent,
         YesIntentHandler,
         NoIntentHandler,
         MakeBobaIntentHandler,
