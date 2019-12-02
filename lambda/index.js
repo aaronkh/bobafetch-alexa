@@ -119,8 +119,8 @@ const GetLastDrinkIntentHandler = {
             return handlerInput.responseBuilder
                 .speak(output)
                 .reprompt(output)
-                .getResponse()
                 .withShouldEndSession(false)
+                .getResponse()
         } else {
             const output = `You haven't made any orders yet. Try asking for a classic milk tea!`
             return handlerInput.responseBuilder.speak(output).getResponse()
