@@ -12,6 +12,7 @@ const persistenceAdapter = new persistence.S3PersistenceAdapter({
 })
 
 const createDrink = async (tea, sugar, ice) => {
+    console.log('create drink called with ' + `${tea} ${sugar} ${ice}`)
     try {
         const body = {
             options: {
