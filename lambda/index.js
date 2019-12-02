@@ -12,6 +12,7 @@ const persistenceAdapter = new persistence.S3PersistenceAdapter({
 })
 
 const createDrink = async (tea, sugar, ice) => {
+    console.log('create drink called with ' + `${tea} ${sugar} ${ice}`)
     try {
         const body = {
             options: {
@@ -155,7 +156,7 @@ const YesIntentHandler = {
             case YES_INTENTS.LAST_DRINK_CONFIRMATION:
                 try{
                     let drinkObject = persistentAttributes.lastDrink
-                    console.log('lastDrink is a ' + JSON.stringify(drinkObject))
+                    console.log('lastDrink is b ' + JSON.stringify(drinkObject))
                     console.log('ice' in drinkObject)
                     await createDrink(drinkObject.tea, drinkObject.sugar. drinkObject.ice)
                     let drinkString = persistentAttributes.lastDrink.string
