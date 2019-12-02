@@ -144,10 +144,8 @@ const GetQueueIntentHandler = {
 
 const YesIntentHandler = {
     canHandle(handlerInput) {
-        const attributes = handlerInput.attributesManager.getSessionAttributes()
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
-            && attributes.state === YES_SESSION_STATE
     },
     async handle(handlerInput) {
         let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
@@ -167,7 +165,6 @@ const YesIntentHandler = {
                         .getResponse()
                 }
         }
-        //write your logic 
 
         return handlerInput.responseBuilder
             .speak('Cool!')
@@ -177,10 +174,10 @@ const YesIntentHandler = {
 
 const NoIntentHandler = {
     canHandle(handlerInput) {
-        const attributes = handlerInput.attributesManager.getSessionAttributes()
+        // const attributes = handlerInput.attributesManager.getSessionAttributes()
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent'
-            && attributes.state === YES_SESSION_STATE // expecting a yes/no question
+            // && attributes.state === YES_SESSION_STATE // expecting a yes/no question
     },
     async handle(handlerInput) {
         return handlerInput.responseBuilder // clears sessions as well
