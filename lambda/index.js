@@ -40,7 +40,6 @@ const MakeBobaIntentHandler = {
 
             if (persistentAttributes.isPurchasing) {
                 let ispIdList = await common.getISPListByName(handlerInput.serviceClientFactory.getMonetizationServiceClient(), 'Boba')
-                console.log('got list ')
                 if (ispIdList.length > 0 && ispIdList[0].purchasable === 'PURCHASABLE'){
                     // session attributes are cleared during payment flow, so we save into persistent
                     persistentAttributes.currentDrink = currentDrink
@@ -96,7 +95,7 @@ const BobaPurchaseHandler = {
             return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
         }
 
-        let speakOutput = '';
+        let speakOutput = ''
     
         // IF THE USER DECLINED THE PURCHASE.
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
@@ -116,7 +115,7 @@ const BobaPurchaseHandler = {
     
         return handlerInput.responseBuilder
           .speak(speakOutput)
-          .getResponse();
+          .getResponse()
     }
 }
 
