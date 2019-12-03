@@ -46,9 +46,7 @@ const MakeBobaIntentHandler = {
                     persistentAttributes.currentDrink = currentDrink
                     handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
                     handlerInput.attributesManager.savePersistentAttributes()
-                    console.log('wtf')
                     return handlerInput.responseBuilder
-                        .speak(`Your order will cost $3. Is that OK?`) // TODO: check costs at runtime
                         .addDirective({
                             type: 'Connections.SendRequest',
                             name: 'Buy',
