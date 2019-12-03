@@ -11,6 +11,7 @@ exports.YES_INTENTS = {
 exports.getISPListByName = async (monetizationService, name, locale) => {
     if(!locale) locale = 'en-US'
     let isps = await monetizationService.getInSkillProducts(locale)
+    console.log(typeof isps)
     return isps.filter(item => item.referenceName === name)
 }
 
