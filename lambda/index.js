@@ -40,12 +40,13 @@ const MakeBobaIntentHandler = {
 
             if (persistentAttributes.isPurchasing) {
                 let ispIdList = await common.getISPListByName(handlerInput.serviceClientFactory.getMonetizationServiceClient(), 'Boba')
+                console.log('got list ')
                 if (ispIdList.length > 0 && ispIdList[0] === 'PURCHASABLE'){
                     // session attributes are cleared during payment flow, so we save into persistent
                     persistentAttributes.currentDrink = currentDrink
                     handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
                     handlerInput.attributesManager.savePersistentAttributes()
-
+                    console.log('wtf')
                     return handlerInput.responseBuilder
                         .speak(`Your order will cost $3. Is that OK?`) // TODO: check costs at runtime
                         .addDirective({
@@ -58,7 +59,6 @@ const MakeBobaIntentHandler = {
                             },
                             token: "correlationToken"
                         })
-                        .withShouldEndSession(true) // ISP always ends your session during the payment flow
                         .withSimpleCard('Title', 'Content')
                         .getResponse()
                 } else {
