@@ -226,15 +226,15 @@ const IntentReflectorHandler = {
     }
 }
 
-const ConnectionResponseHandler = { canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'Connections.Response' 
+const CatchAllHandler = { canHandle(handlerInput) {
+    console.log(`***** fallbackType: ${JSON.stringify(handlerInput)}`)
+    return handlerInput === handlerInput
 },
 handle(handlerInput) {
-    console.log(JSON.stringify(handlerInput))
+    console.log(`***** fallback: ${JSON.stringify(handlerInput)}`)
     return (
         handlerInput.responseBuilder
-            .speak(`Connection response`)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .speak(`Catch all`)
             .getResponse()
     )
 }}
@@ -267,8 +267,8 @@ exports.handler = Alexa.SkillBuilders.custom()
         GetLastDrinkIntentHandler,
         BuiltinIntents.CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
-        ConnectionResponseHandler,
-        IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+        IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+        CatchAllHandler // fallback if request is not an intent
     )
     .withApiClient(new Alexa.DefaultApiClient())
     .addErrorHandlers(ErrorHandler)
