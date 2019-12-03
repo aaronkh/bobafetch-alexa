@@ -91,6 +91,7 @@ const BobaPurchaseHandler = {
             handlerInput.requestEnvelope.request.name === 'Buy')
     },
     async handler(handlerInput) {
+        console.log('handler handler handler handler handler ')
         const persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
 
         if (!persistentAttributes.currentDrink) {
