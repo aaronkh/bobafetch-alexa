@@ -82,6 +82,7 @@ const MakeBobaIntentHandler = {
 
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
+        console.log('ftuvywebjnlkmrlvguwkqhbjkefklmd')
         return handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
             handlerInput.requestEnvelope.request.name === 'Buy'
     },
@@ -242,15 +243,10 @@ const ErrorHandler = {
 }
 
 const RequestLog = {
-
     process(handlerInput) {
-
         console.log("REQUEST ENVELOPE = " + JSON.stringify(handlerInput.requestEnvelope))
-
         return
-
     }
-
 }
 
 exports.handler = Alexa.SkillBuilders.custom()
