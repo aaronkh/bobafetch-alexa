@@ -12,12 +12,14 @@ const persistenceAdapter = new persistence.S3PersistenceAdapter({
 
 const MakeBobaIntentHandler = {
     canHandle(handlerInput) {
-        return (
-            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+        const t = (
+            handlerInput.requestEnvelope.type ===
             'IntentRequest' &&
-            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+            handlerInput.requestEnvelope.intent.name ===
             'MakeBobaIntent'
         )
+        console.log('make boba is ' + t)
+        return t
     },
     async handle(handlerInput) {
         console.log(handlerInput)
