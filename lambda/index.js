@@ -226,6 +226,19 @@ const IntentReflectorHandler = {
     }
 }
 
+const ConnectionResponseHandler = { canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'Connections.Response' 
+},
+handle(handlerInput) {
+    console.log(JSON.stringify(handlerInput))
+    return (
+        handlerInput.responseBuilder
+            .speak(`Connection response`)
+            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
+            .getResponse()
+    )
+}}
+
 const ErrorHandler = {
     canHandle() {
         return true
@@ -254,6 +267,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         GetLastDrinkIntentHandler,
         BuiltinIntents.CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
+        ConnectionResponseHandler,
         IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
     .withApiClient(new Alexa.DefaultApiClient())
