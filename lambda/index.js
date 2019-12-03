@@ -1,6 +1,8 @@
+// MODULES 
 const Alexa = require('ask-sdk-core')
 const persistence = require('ask-sdk-s3-persistence-adapter')
 
+// LOCAL IMPORTS
 const common = require('./common.js')
 const BuiltinIntents = require('./builtin-intents.js')
 
@@ -26,26 +28,51 @@ const MakeBobaIntentHandler = {
         const ice = intent.slots.Ice.value
 
         try {
-            await common.createDrink(tea, sugar, ice)
-
-            const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
             let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
 
             // saves ordered drinks
-            const lastDrink = {
+            const currentDrink = {
                 string: `${tea} with ${sugar} percent sweetness and ${ice} percent ice`,
-                tea: tea, 
+                tea: tea,
                 ice: ice,
                 sugar: sugar
             }
-            persistentAttributes.lastDrink = lastDrink
-            handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
-            handlerInput.attributesManager.savePersistentAttributes()
 
-            return handlerInput.responseBuilder
-                .speak(speakOutput)
-                .withSimpleCard('Title', 'Content')
-                .getResponse()
+            if (persistentAttributes.isPurchasing) {
+                let ispIdList = common.getISPListByName(handlerInput.serviceClientFactory.getMonetizationServiceClient(), 'Boba')
+                if (ispIdList.length > 0 && ispIdList[0] === 'PURCHASABLE'){
+                    // session attributes are cleared during payment flow, so we save into persistent
+                    persistentAttributes.currentDrink = currentDrink
+                    handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+                    handlerInput.attributesManager.savePersistentAttributes()
+
+                    return handlerInput.responseBuilder
+                        .speak(`Your order will cost $3. Is that OK?`) // TODO: check costs at runtime
+                        .addDirective({
+                            type: 'Connections.SendRequest',
+                            name: 'Buy',
+                            payload: {
+                                InSkillProduct: {
+                                    productId: ispIdList[0].productId,
+                                }
+                            },
+                            token: "correlationToken"
+                        })
+                        .withShouldEndSession(true) // ISP always ends your session during the payment flow
+                        .withSimpleCard('Title', 'Content')
+                        .getResponse()
+                } else {
+                    return handlerInput.responseBuilder
+                        .speak(`Sorry, there was a problem purchasing your drink.`)
+                }
+            } else {
+                await common.createDrink(tea, sugar, ice)
+                const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+                persistentAttributes.lastDrink = currentDrink
+                handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+                handlerInput.attributesManager.savePersistentAttributes()
+                return handlerInput.responseBuilder.speak(speakOutput).getResponse()
+            }
         } catch (err) {
             console.log(err)
 
@@ -53,6 +80,45 @@ const MakeBobaIntentHandler = {
                 .speak('Something went wrong. Please try again')
                 .getResponse()
         }
+    }
+}
+
+const BobaPurchaseHandler = {
+    canHandle(handlerInput) {
+        return (
+            handlerInput.requestEnvelope.request.type === 'Connections.Response' && 
+            handlerInput.requestEnvelope.request.name === 'Buy'
+        )
+    },
+    async handler(handlerInput) {
+        const persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
+
+        if(!persistentAttributes.currentDrink) {
+            console.log('How did you get here, nobody knows')
+            return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
+        }
+
+        let speakOutput = '';
+    
+        // IF THE USER DECLINED THE PURCHASE.
+        if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
+            const currentDrink = persistentAttributes.currentDrink
+            await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
+            speakOutput = `Thank you. Your order has been added to the queue.`
+        } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
+          speakOutput = `We couldn't complete your purchase right now. Please try again later.`
+        }
+        // declines are handled automatically by alexa
+    
+        // move current drink -> last drink
+        persistentAttributes.lastDrink = persistentAttributes.currentDrink
+        persistentAttributes.currentDrink = undefined
+        handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+        handlerInput.attributesManager.savePersistentAttributes()
+    
+        return handlerInput.responseBuilder
+          .speak(speakOutput)
+          .getResponse();
     }
 }
 
@@ -64,14 +130,14 @@ const TogglePurchasingIntent = {
             Alexa.getIntentName(handlerInput.requestEnvelope) ===
             'TogglePurchasingIntent'
         )
-    }, 
+    },
     async handle(handlerInput) {
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
         const toggle = intent.slots.OnOff.value
 
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
-        
+
         // saves ordered drinks
         persistentAttributes.isPurchasing = toggle.toLowerCase() === 'on'
         handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
@@ -184,6 +250,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         BuiltinIntents.LaunchRequestHandler,
         TogglePurchasingIntent,
+        BobaPurchaseHandler,
         BuiltinIntents.YesIntentHandler,
         BuiltinIntents.NoIntentHandler,
         MakeBobaIntentHandler,
