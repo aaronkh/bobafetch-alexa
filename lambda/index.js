@@ -41,7 +41,7 @@ const MakeBobaIntentHandler = {
             if (persistentAttributes.isPurchasing) {
                 let ispIdList = await common.getISPListByName(handlerInput.serviceClientFactory.getMonetizationServiceClient(), 'Boba')
                 console.log('got list ')
-                if (ispIdList.length > 0 && ispIdList[0] === 'PURCHASABLE'){
+                if (ispIdList.length > 0 && ispIdList[0].purchasable === 'PURCHASABLE'){
                     // session attributes are cleared during payment flow, so we save into persistent
                     persistentAttributes.currentDrink = currentDrink
                     handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
@@ -63,7 +63,7 @@ const MakeBobaIntentHandler = {
                         .getResponse()
                 } else {
                     return handlerInput.responseBuilder
-                        .speak(`Sorry, there was a problem purchasing your drink.`)
+                        .speak(`Sorry, there was a problem purchasing your drink.`).getResponse()
                 }
             } else {
                 await common.createDrink(tea, sugar, ice)
