@@ -85,9 +85,10 @@ const BobaPurchaseHandler = {
         console.log('help ' + JSON.stringify(handlerInput.requestEnvelope.request))
         console.log('help ' + (handlerInput.requestEnvelope.request.name))
         console.log('help ' + (typeof handlerInput.requestEnvelope.request.name))
-        console.log('help ' + (handlerInput.requestEnvelope.request.name === 'Buy'))
-        return handlerInput.requestEnvelope.request.type == 'Connections.Response' &&
-            handlerInput.requestEnvelope.request.name == 'Buy'
+        console.log(handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
+        handlerInput.requestEnvelope.request.name === 'Buy')
+        return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
+            handlerInput.requestEnvelope.request.name === 'Buy')
     },
     async handler(handlerInput) {
         const persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
