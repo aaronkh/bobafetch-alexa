@@ -87,8 +87,11 @@ const BobaPurchaseHandler = {
         console.log('help ' + (typeof handlerInput.requestEnvelope.request.name))
         console.log(handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
         handlerInput.requestEnvelope.request.name === 'Buy')
-        return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
-            handlerInput.requestEnvelope.request.name === 'Buy')
+        return (
+            handlerInput.requestEnvelope.request.type === "Connections.Response" &&
+            (handlerInput.requestEnvelope.request.name === "Buy" ||
+              handlerInput.requestEnvelope.request.name === "Upsell")
+          )
     },
     async handler(handlerInput) {
         console.log('handler handler handler handler handler ')
