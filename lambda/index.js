@@ -40,7 +40,7 @@ const MakeBobaIntentHandler = {
 
             if (persistentAttributes.isPurchasing) {
                 let ispIdList = await common.getISPListByName(handlerInput.serviceClientFactory.getMonetizationServiceClient(), 'Boba')
-                if (ispIdList.length > 0 && ispIdList[0].purchasable === 'PURCHASABLE'){
+                if (ispIdList.length > 0 && ispIdList[0].purchasable === 'PURCHASABLE') {
                     // session attributes are cleared during payment flow, so we save into persistent
                     persistentAttributes.currentDrink = currentDrink
                     handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
@@ -82,38 +82,38 @@ const MakeBobaIntentHandler = {
 
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'Connections.Response' && 
+        return handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
             handlerInput.requestEnvelope.request.name === 'Buy'
     },
     async handler(handlerInput) {
         const persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
 
-        if(!persistentAttributes.currentDrink) {
+        if (!persistentAttributes.currentDrink) {
             console.log('How did you get here, nobody knows')
             return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
         }
 
         let speakOutput = ''
-    
+
         // IF THE USER DECLINED THE PURCHASE.
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
             const currentDrink = persistentAttributes.currentDrink
             await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
             speakOutput = `Thank you. Your order has been added to the queue.`
         } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
-          speakOutput = `We couldn't complete your purchase right now. Please try again later.`
+            speakOutput = `We couldn't complete your purchase right now. Please try again later.`
         }
         // declines are handled automatically by alexa
-    
+
         // move current drink -> last drink
         persistentAttributes.lastDrink = persistentAttributes.currentDrink
         persistentAttributes.currentDrink = undefined
         handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
         handlerInput.attributesManager.savePersistentAttributes()
-    
+
         return handlerInput.responseBuilder
-          .speak(speakOutput)
-          .getResponse()
+            .speak(speakOutput)
+            .getResponse()
     }
 }
 
@@ -226,19 +226,6 @@ const IntentReflectorHandler = {
     }
 }
 
-const CatchAllHandler = { canHandle(handlerInput) {
-    console.log(`***** fallbackType: ${JSON.stringify(handlerInput)}`)
-    return handlerInput === handlerInput
-},
-handle(handlerInput) {
-    console.log(`***** fallback: ${JSON.stringify(handlerInput)}`)
-    return (
-        handlerInput.responseBuilder
-            .speak(`Catch all`)
-            .getResponse()
-    )
-}}
-
 const ErrorHandler = {
     canHandle() {
         return true
@@ -252,6 +239,18 @@ const ErrorHandler = {
             .reprompt(speakOutput)
             .getResponse()
     }
+}
+
+const RequestLog = {
+
+    process(handlerInput) {
+
+        console.log("REQUEST ENVELOPE = " + JSON.stringify(handlerInput.requestEnvelope))
+
+        return
+
+    }
+
 }
 
 exports.handler = Alexa.SkillBuilders.custom()
@@ -268,9 +267,9 @@ exports.handler = Alexa.SkillBuilders.custom()
         BuiltinIntents.CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
-        CatchAllHandler // fallback if request is not an intent
     )
     .withApiClient(new Alexa.DefaultApiClient())
     .addErrorHandlers(ErrorHandler)
+    .addRequestInterceptors(RequestLog)
     .withPersistenceAdapter(persistenceAdapter)
     .lambda()
