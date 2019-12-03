@@ -82,10 +82,8 @@ const MakeBobaIntentHandler = {
 
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
-        return (
-            handlerInput.requestEnvelope.request.type === 'Connections.Response' && 
+        return handlerInput.requestEnvelope.request.type === 'Connections.Response' && 
             handlerInput.requestEnvelope.request.name === 'Buy'
-        )
     },
     async handler(handlerInput) {
         const persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
