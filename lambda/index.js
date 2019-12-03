@@ -4,7 +4,6 @@ const persistence = require('ask-sdk-s3-persistence-adapter')
 
 // LOCAL IMPORTS
 const common = require('./common.js')
-const BuiltinIntents = require('./builtin-intents.js')
 
 const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
@@ -89,7 +88,7 @@ const BobaPurchaseHandler = {
         const t = (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
         handlerInput.requestEnvelope.request.name === 'Buy')
         console.log(t)
-        return true
+        return t
     },
     async handler(handlerInput) {
         console.log('handler handler handler handler handler ')
@@ -257,17 +256,13 @@ const RequestLog = {
 
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
-        BuiltinIntents.LaunchRequestHandler,
+        ...require('./builtin-intents.js'),
         TogglePurchasingIntent,
-        BuiltinIntents.YesIntentHandler,
-        BuiltinIntents.NoIntentHandler,
+        BobaPurchaseHandler,
         MakeBobaIntentHandler,
         GetQueueIntentHandler,
-        BuiltinIntents.HelpIntentHandler,
         GetLastDrinkIntentHandler,
-        BuiltinIntents.CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
-        BobaPurchaseHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
     .withApiClient(new Alexa.DefaultApiClient())
