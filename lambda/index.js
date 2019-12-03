@@ -85,13 +85,10 @@ const BobaPurchaseHandler = {
         console.log('help ' + JSON.stringify(handlerInput.requestEnvelope.request))
         console.log('help ' + (handlerInput.requestEnvelope.request.name))
         console.log('help ' + (typeof handlerInput.requestEnvelope.request.name))
-        console.log(handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
+        const t = (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
         handlerInput.requestEnvelope.request.name === 'Buy')
-        return (
-            handlerInput.requestEnvelope.request.type === "Connections.Response" &&
-            (handlerInput.requestEnvelope.request.name === "Buy" ||
-              handlerInput.requestEnvelope.request.name === "Upsell")
-          )
+        console.log(t)
+        return t
     },
     async handler(handlerInput) {
         console.log('handler handler handler handler handler ')
@@ -261,7 +258,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         BuiltinIntents.LaunchRequestHandler,
         TogglePurchasingIntent,
-        // BobaPurchaseHandler,
+        BobaPurchaseHandler,
         BuiltinIntents.YesIntentHandler,
         BuiltinIntents.NoIntentHandler,
         MakeBobaIntentHandler,
