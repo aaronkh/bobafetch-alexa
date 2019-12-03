@@ -261,7 +261,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         BuiltinIntents.LaunchRequestHandler,
         TogglePurchasingIntent,
-        BobaPurchaseHandler,
+        // BobaPurchaseHandler,
         BuiltinIntents.YesIntentHandler,
         BuiltinIntents.NoIntentHandler,
         MakeBobaIntentHandler,
