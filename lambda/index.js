@@ -12,13 +12,12 @@ const persistenceAdapter = new persistence.S3PersistenceAdapter({
 
 const MakeBobaIntentHandler = {
     canHandle(handlerInput) {
-        return true
-        // return (
-        //     Alexa.getRequestType(handlerInput.requestEnvelope) ===
-        //     'IntentRequest' &&
-        //     Alexa.getIntentName(handlerInput.requestEnvelope) ===
-        //     'MakeBobaIntent'
-        // )
+        return (
+            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+            'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+            'MakeBobaIntent'
+        )
     },
     async handle(handlerInput) {
         console.log(handlerInput)
@@ -90,7 +89,7 @@ const BobaPurchaseHandler = {
         const t = (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
         handlerInput.requestEnvelope.request.name === 'Buy')
         console.log(t)
-        return t
+        return true
     },
     async handler(handlerInput) {
         console.log('handler handler handler handler handler ')
@@ -260,7 +259,6 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         BuiltinIntents.LaunchRequestHandler,
         TogglePurchasingIntent,
-        BobaPurchaseHandler,
         BuiltinIntents.YesIntentHandler,
         BuiltinIntents.NoIntentHandler,
         MakeBobaIntentHandler,
@@ -269,6 +267,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         GetLastDrinkIntentHandler,
         BuiltinIntents.CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
+        BobaPurchaseHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
     .withApiClient(new Alexa.DefaultApiClient())
