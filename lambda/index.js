@@ -82,7 +82,8 @@ const MakeBobaIntentHandler = {
 
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
-        console.log('ftuvywebjnlkmrlvguwkqhbjkefklmd')
+        console.log('help ' + handlerInput.requestEnvelope.request.type === 'Connections.Response')
+        console.log('help ' + handlerInput.requestEnvelope.request.name === 'Buy')
         return handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
             handlerInput.requestEnvelope.request.name === 'Buy'
     },
