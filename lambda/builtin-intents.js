@@ -7,6 +7,7 @@ exports.YesIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
     },
     async handle(handlerInput) {
+        console.log('Is this Intent being triggered?')
         let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
         let yesIntent = sessionAttributes.yesIntent
