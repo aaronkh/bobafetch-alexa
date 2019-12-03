@@ -261,6 +261,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         SessionEndedRequestHandler,
         IntentReflectorHandler // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
+    .withApiClient(new Alexa.DefaultApiClient())
     .addErrorHandlers(ErrorHandler)
     .withPersistenceAdapter(persistenceAdapter)
     .lambda()
