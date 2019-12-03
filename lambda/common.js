@@ -8,6 +8,12 @@ exports.YES_INTENTS = {
     LAST_DRINK_CONFIRMATION: 'LAST_DRINK_CONFIRMATION'
 }
 
+exports.getISPListByName = async (monetizationService, name, locale) => {
+    if(!locale) locale = 'en-US'
+    let isps = await monetizationService.getInSkillProducts(locale)
+    return isps.filter(item => item.referenceName === name)
+}
+
 exports.createDrink = async (tea, sugar, ice) => {
     console.log('create drink called with ' + `${tea} ${sugar} ${ice}`)
     try {
