@@ -81,19 +81,37 @@ const MakeBobaIntentHandler = {
 
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
-        console.log('help ' + JSON.stringify(handlerInput.requestEnvelope.request))
-        console.log('help ' + (handlerInput.requestEnvelope.request.name))
-        console.log('help ' + (typeof handlerInput.requestEnvelope.request.name))
-        
-        // const t = (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
-        // handlerInput.requestEnvelope.request.name === 'Buy')
-        // console.log(t)
-        return true
+        return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
+        handlerInput.requestEnvelope.request.name === 'Buy')
     },
-    async handler(handlerInput) {
-        console.log('aaa')
+    async handle(handlerInput) {
+        // console.log('handler handler handler handler handler ')
+        const persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
+
+        if (!persistentAttributes.currentDrink) {
+            console.log('How did you get here, nobody knows')
+            return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
+        }
+
+        let speakOutput = 'Your order has been added to the queue. See you again soon!'
+
+        // // IF THE USER DECLINED THE PURCHASE.
+        if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
+            const currentDrink = persistentAttributes.currentDrink
+            await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
+            speakOutput = `Thank you. Your order has been added to the queue.`
+        } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
+            speakOutput = `We couldn't complete your purchase right now. Please try again later.`
+        }
+        // // declines are handled automatically by alexa
+
+        // // move current drink -> last drink
+        persistentAttributes.lastDrink = persistentAttributes.currentDrink
+        persistentAttributes.currentDrink = undefined
+        handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+        handlerInput.attributesManager.savePersistentAttributes()
         return handlerInput.responseBuilder
-            .speak("speakOutput")
+            .speak(speakOutput)
             .getResponse()
     }
 }
