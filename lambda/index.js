@@ -93,7 +93,7 @@ const BobaPurchaseHandler = {
             return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
         }
 
-        let speakOutput = 'Your order has been added to the queue. See you again soon!'
+        let speakOutput = `A ${persistentAttributes.currentDrink.string} has been added to the queue. See you again soon!`
 
         // // IF THE USER DECLINED THE PURCHASE.
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
