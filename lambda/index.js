@@ -4,7 +4,6 @@ const persistence = require('ask-sdk-s3-persistence-adapter')
 
 // LOCAL IMPORTS
 const common = require('./common.js')
-const builtin = require('./builtin-intents.js')
 
 const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
@@ -92,32 +91,7 @@ const BobaPurchaseHandler = {
         return true
     },
     async handler(handlerInput) {
-        // console.log('handler handler handler handler handler ')
-        // const persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
-
-        // if (!persistentAttributes.currentDrink) {
-            console.log('How did you get here, nobody knows')
-        //     return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
-        // }
-
-        // let speakOutput = ''
-
-        // // IF THE USER DECLINED THE PURCHASE.
-        // if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
-        //     const currentDrink = persistentAttributes.currentDrink
-        //     await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
-        //     speakOutput = `Thank you. Your order has been added to the queue.`
-        // } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
-        //     speakOutput = `We couldn't complete your purchase right now. Please try again later.`
-        // }
-        // // declines are handled automatically by alexa
-
-        // // move current drink -> last drink
-        // persistentAttributes.lastDrink = persistentAttributes.currentDrink
-        // persistentAttributes.currentDrink = undefined
-        // handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
-        // handlerInput.attributesManager.savePersistentAttributes()
-
+        console.log('aaa')
         return handlerInput.responseBuilder
             .speak("speakOutput")
             .getResponse()
@@ -238,7 +212,6 @@ const ErrorHandler = {
         return true
     },
     handle(handlerInput, error) {
-        console.log(builtin)
         console.log(`~~~~ Error handled: ${error.stack}`)
         const speakOutput = `Sorry, I had trouble doing what you asked. Please try again.`
 
