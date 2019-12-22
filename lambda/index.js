@@ -258,11 +258,7 @@ const RequestLog = {
 
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
-        // ...require('./builtin-intents.js'),
-        builtin.CancelAndStopIntentHandler,
-        builtin.HelpIntentHandler,
-        builtin.LaunchRequestHandler,
-        builtin.NoIntentHandler,
+        ...require('./builtin-intents.js').intents,
         TogglePurchasingIntent,
         BobaPurchaseHandler,
         MakeBobaIntentHandler,
