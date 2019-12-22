@@ -4,6 +4,7 @@ const persistence = require('ask-sdk-s3-persistence-adapter')
 
 // LOCAL IMPORTS
 const common = require('./common.js')
+const builtin = require('./builtin-intents.js')
 
 const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
@@ -237,6 +238,7 @@ const ErrorHandler = {
         return true
     },
     handle(handlerInput, error) {
+        console.log(builtin)
         console.log(`~~~~ Error handled: ${error.stack}`)
         const speakOutput = `Sorry, I had trouble doing what you asked. Please try again.`
 
@@ -256,7 +258,11 @@ const RequestLog = {
 
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
-        ...require('./builtin-intents.js'),
+        // ...require('./builtin-intents.js'),
+        builtin.CancelAndStopIntentHandler,
+        builtin.HelpIntentHandler,
+        builtin.LaunchRequestHandler,
+        builtin.NoIntentHandler,
         TogglePurchasingIntent,
         BobaPurchaseHandler,
         MakeBobaIntentHandler,
