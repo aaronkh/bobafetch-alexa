@@ -113,7 +113,6 @@ const BobaPurchaseHandler = {
         handlerInput.attributesManager.savePersistentAttributes()
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .withShouldEndSession(true)
             .getResponse()
     }
 }
