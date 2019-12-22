@@ -1,7 +1,7 @@
 const Alexa = require('ask-sdk-core')
 const common = require('./common.js')
 
-module.YesIntentHandler = {
+const YesIntentHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
@@ -32,7 +32,7 @@ module.YesIntentHandler = {
     }
 }
 
-module.exports.NoIntentHandler = {
+const NoIntentHandler = {
     canHandle(handlerInput) {
         // const attributes = handlerInput.attributesManager.getSessionAttributes()
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -47,7 +47,7 @@ module.exports.NoIntentHandler = {
 }
 
 
-module.exports.HelpIntentHandler = {
+const HelpIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
@@ -65,7 +65,7 @@ module.exports.HelpIntentHandler = {
     }
 }
 
-module.exports.CancelAndStopIntentHandler = {
+const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
@@ -82,7 +82,7 @@ module.exports.CancelAndStopIntentHandler = {
     }
 }
 
-module.exports.LaunchRequestHandler = {
+const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
@@ -98,3 +98,11 @@ module.exports.LaunchRequestHandler = {
             .getResponse()
     }
 }
+
+module.exports.intents = [
+    LaunchRequestHandler, 
+    CancelAndStopIntentHandler, 
+    YesIntentHandler, 
+    NoIntentHandler, 
+    HelpIntentHandler
+]
