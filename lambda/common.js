@@ -4,18 +4,18 @@
 const rp = require('request-promise-native')
 const url = 'http://35.230.20.197:5000'
 
-exports.YES_INTENTS = {
+module.exports.YES_INTENTS = {
     LAST_DRINK_CONFIRMATION: 'LAST_DRINK_CONFIRMATION'
 }
 
-exports.getISPListByName = async (monetizationService, name, locale) => {
+module.exports.getISPListByName = async (monetizationService, name, locale) => {
     if(!locale) locale = 'en-US'
     let isps = await monetizationService.getInSkillProducts(locale)
     console.log(isps.inSkillProducts)
     return isps.inSkillProducts.filter(item => item.referenceName === name)
 }
 
-exports.createDrink = async (tea, sugar, ice) => {
+module.exports.createDrink = async (tea, sugar, ice) => {
     console.log('create drink called with ' + `${tea} ${sugar} ${ice}`)
     try {
         const body = {
@@ -36,7 +36,7 @@ exports.createDrink = async (tea, sugar, ice) => {
     }
 }
 
-exports.getIsPurchasing = async (handlerInput) => {
+module.exports.getIsPurchasing = async (handlerInput) => {
     let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
     return persistentAttributes.isPurchasing === true
 }
