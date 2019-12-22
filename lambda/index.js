@@ -93,13 +93,14 @@ const BobaPurchaseHandler = {
             return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
         }
 
-        let speakOutput = `A ${persistentAttributes.currentDrink.string} has been added to the queue. See you again soon!`
+        
+        let speakOutput = ``
 
         // // IF THE USER DECLINED THE PURCHASE.
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
             const currentDrink = persistentAttributes.currentDrink
             await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
-            speakOutput = `Your order has been added to the queue. See you again soon!`
+            speakOutput = `A ${currentDrink.string} has been added to the queue. See you again soon!`
         } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
             speakOutput = `We couldn't complete your purchase right now. Please try again later.`
         }
