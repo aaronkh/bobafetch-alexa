@@ -99,7 +99,7 @@ const BobaPurchaseHandler = {
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
             const currentDrink = persistentAttributes.currentDrink
             await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
-            speakOutput = `Thank you. Your order has been added to the queue.`
+            speakOutput = `Your order has been added to the queue. See you again soon!`
         } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
             speakOutput = `We couldn't complete your purchase right now. Please try again later.`
         }
@@ -112,6 +112,7 @@ const BobaPurchaseHandler = {
         handlerInput.attributesManager.savePersistentAttributes()
         return handlerInput.responseBuilder
             .speak(speakOutput)
+            .withShouldEndSession(true)
             .getResponse()
     }
 }
