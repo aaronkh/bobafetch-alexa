@@ -266,11 +266,19 @@ const ManualListenerIntentHandler = {
                 })
                 .addDirective({
                     type: 'CustomInterfaceController.SendDirective',
+                    endpoint: {
+                        endpointId: 'A1Y3BWBX6TUJMG' // TODO: remove
+                    },
+                    header: {
+                        name: action.toUpperCase(),
+                        namespace: 'Custom.Mindstorms.Gadget'
+                    },
                     payload: {
-                    "type": "manual",
-                    "token": token,
-                    "num": length,
-                    "command": action}
+                        "type": "manual",
+                        "token": token,
+                        "num": length,
+                        "command": action
+                    }
                 })
                 .reprompt(`${action} ${length} ${unit}`)
                 .getResponse()
