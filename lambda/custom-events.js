@@ -45,12 +45,12 @@ const DoneEventHandler = {
     handle(handlerInput) {
         console.log("== Received custom event == DONE");
         let { request } = handlerInput.requestEnvelope
-        let payload = request.events[0].payload;
-
+        let payload = request.events[0].payload
+        let ssml = `Hello${payload.name === 'Anonymous'? '' : `<alexa:name type="first" personId="${payload.name}"/>`}, `
+        ssml += `your ${payload.tea} with ${payload.sugar} percent sugar and ${payload.ice} percent ice is finished. Please come pick it up!`
         return handlerInput.responseBuilder
-            .speak(payload.speak)
+            .speak(ssml)
             .getResponse();
-
     }
 
 }
