@@ -243,7 +243,15 @@ const ManualIntentHandler = {
         // eslint-disable-next-line require-atomic-updates
         handlerInput.attributesManager.endpointId = apiResponse.endpoints[0].endpointId || [];
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+        let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
         return handlerInput.responseBuilder
+        .addDirective({
+            type: "CustomInterfaceController.StartEventHandler",
+            token: token,
+            expiration: {
+                durationInMilliseconds: 90000,
+            }
+        })
             .speak('Ready').reprompt("Awaiting commands").getResponse()
     }
 
@@ -266,21 +274,12 @@ const ManualListenerIntentHandler = {
 
             console.log({ action, length, unit })
             // parse query
-            let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
+            
             return handlerInput.responseBuilder
-                .addDirective({
-                    type: "CustomInterfaceController.StartEventHandler",
-                    token: token,
-                    expiration: {
-                        durationInMilliseconds: 90000,
-                    }
-                })
                 .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
-
                     'Custom.Mindstorms.Gadget', action.toUpperCase(),
                     {
                         "type": "manual",
-                        "token": token,
                         "num": length,
                         "command": action
                     }
