@@ -1,33 +1,10 @@
-
-const StartInputIntentHandler = {
-    canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'StartEventHandlerIntent';
-    },
-    handle(handlerInput) {
-
-        // https://developer.amazon.com/en-US/docs/alexa/alexa-gadgets-toolkit/receive-custom-event-from-gadget.html#start
-        console.log(`registered event handler for ${handlerInput.requestEnvelope.request.requestId}`);
-        return handlerInput.responseBuilder
-            .speak("Let's start the game!")
-            .withShouldEndSession(false)
-            .addDirective({
-                'type': 'CustomInterfaceController.StartEventHandler',
-                'token': handlerInput.requestEnvelope.request.requestId,
-                'expiration': {
-                    'durationInMilliseconds': 90000, // will only receive for up to 90s
-                },
-            })
-            .getResponse();
-    }
-};
-
-
 //TODO: validate gadgets
 const CupEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
-            handlerInput.requestEnvelope.request.events[0].header.name === 'CUP';
+        let { request } = handlerInput.requestEnvelope;
+        if (request.type !== 'CustomInterfaceController.EventsReceived') return false;
+        let customEvent = request.events[0];
+        return customEvent && handlerInput.requestEnvelope.request.events[0].header.name === 'CUP';
     },
     handle(handlerInput) {
         console.log("== Received custom event == CUP");
@@ -39,8 +16,10 @@ const CupEventHandler = {
 
 const DoneEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
-            handlerInput.requestEnvelope.request.events[0].header.name === 'DONE';
+        let { request } = handlerInput.requestEnvelope;
+        if (request.type !== 'CustomInterfaceController.EventsReceived') return false;
+        let customEvent = request.events[0];
+        return customEvent && handlerInput.requestEnvelope.request.events[0].header.name === 'DONE';
     },
     handle(handlerInput) {
         console.log("== Received custom event == DONE");
@@ -57,8 +36,10 @@ const DoneEventHandler = {
 
 const PourEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
-            handlerInput.requestEnvelope.request.events[0].header.name === 'POUR';
+        let { request } = handlerInput.requestEnvelope;
+        if (request.type !== 'CustomInterfaceController.EventsReceived') return false;
+        let customEvent = request.events[0];
+        return customEvent && handlerInput.requestEnvelope.request.events[0].header.name === 'POUR';
     },
     handle(handlerInput) {
         console.log("== Received custom event == POUR");
@@ -73,8 +54,10 @@ const PourEventHandler = {
 
 const DispenseEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
-            handlerInput.requestEnvelope.request.events[0].header.name === 'DISPENSE';
+        let { request } = handlerInput.requestEnvelope;
+        if (request.type !== 'CustomInterfaceController.EventsReceived') return false;
+        let customEvent = request.events[0];
+        return customEvent && handlerInput.requestEnvelope.request.events[0].header.name === 'DISPENSE';
     },
     handle(handlerInput) {
         console.log("== Received custom event == DISPENSE");
@@ -118,7 +101,6 @@ const ExpiredEventHandler = {
 }
 
 module.exports.events = [
-    StartInputIntentHandler,
     CupEventHandler,
     ExpiredEventHandler,
     DispenseEventHandler,
