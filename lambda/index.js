@@ -210,11 +210,11 @@ const ManualIntentHandler = {
         )
     },
     handle(handlerInput) {
-        return handlerInput.responseBuilder  .addDelegateDirective({
-            name: 'ManualListenerIntent',
-            confirmationStatus: 'NONE',
-            slots: {}
-          }).reprompt("Awaiting commands").getResponse()
+        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes()
+        sessionAttributes.mode = 'manual'
+        handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
+        return handlerInput.responseBuilder
+        .speak('Ready').reprompt("Awaiting commands").getResponse()
     }
 
 }
@@ -222,20 +222,38 @@ const ManualIntentHandler = {
 const ManualListenerIntentHandler = { 
     canHandle(handlerInput) {
         return (
-            Alexa.getRequestType(handlerInput.requestEnvelope) ===
-            'IntentRequest' &&
-            Alexa.getIntentName(handlerInput.requestEnvelope) ===
-            'ManualListenerIntent'
+            handlerInput.attributesManager.getSessionAttributes() === 'manual'
         )
     },
     handle(handlerInput) { // add directive
+        // cancels are handled by built-in intents
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
-        const query = intent.slots.literal
+        const action = intent.slots.Action
+        const length = intent.slots.length
+        const unit = intent.slots.unit
+        console.log({action, length, unit})
         // parse query
-        return handlerInput.responseBuilder.reprompt("Awaiting commands").getResponse()
+        return handlerInput.responseBuilder.reprompt(`${action} ${length} ${unit}`).getResponse()
     }
 
+}
+
+const GetNameIntentHandler = {
+    canHandle(handlerInput) {
+        return (
+            handlerInput.attributesManager.getSessionAttributes() === 'name'
+        )
+    }, 
+    handle(handlerInput) {
+             // cancels are handled by built-in intents
+             const requestEnvelope = handlerInput.requestEnvelope
+             const intent = requestEnvelope.request.intent
+             const Name = intent.slots.Name
+             // parse query
+             return handlerInput.responseBuilder.getResponse()
+        
+    }
 }
 
 const SessionEndedRequestHandler = {
@@ -301,13 +319,14 @@ module.exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         ...require('./builtin-intents.js').intents,
         ...require('./custom-events.js').events,
+        GetNameIntentHandler,
+        ManualIntentHandler,
+        ManualListenerIntentHandler,
         TogglePurchasingIntent,
         BobaPurchaseHandler,
         MakeBobaIntentHandler,
         GetQueueIntentHandler,
         GetLastDrinkIntentHandler,
-        ManualIntentHandler,
-        ManualListenerIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
