@@ -75,7 +75,7 @@ const MakeBobaIntentHandler = {
                         durationInMilliseconds: 90000,
                     }
                 }).addDirective({
-                    type: "CustomInterfaceController.automatic",
+                    type: "automatic",
                     "name": person? person.personId : undefined,
                     "tea": tea,
                     "sugar": sugar,
@@ -135,7 +135,7 @@ const BobaPurchaseHandler = {
                 }
             })
             .addDirective({
-                type: !currentDrink || "CustomInterfaceController.automatic",
+                type: !currentDrink || "automatic",
                 "name": 'name',
                 "tea": currentDrink.tea,
                 "sugar": currentDrink.sugar,
@@ -248,15 +248,15 @@ const ManualListenerIntentHandler = {
         // cancels are handled by built-in intents
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
-        const action = intent.slots.Action
-        const length = intent.slots.length
-        const unit = intent.slots.unit
+        const action = intent.slots.Action.value
+        const length = intent.slots.length.value
+        const unit = intent.slots.unit.value
         console.log({action, length, unit})
         // parse query
         let token = handlerInput.attributesManager.getPersistentAttributes().token || '';
         return handlerInput.responseBuilder
         .addDirective({
-            "type": "CustomInterfaceController.manual",
+            "type": "manual",
             "token": token,
             "num": length,
             "command": action
