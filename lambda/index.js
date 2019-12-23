@@ -268,23 +268,23 @@ const ManualListenerIntentHandler = {
 }
 
 //TODO: ask for name if person is not recognized
-const GetNameIntentHandler = {
-    canHandle(handlerInput) {
-        return (
-            handlerInput.attributesManager.getSessionAttributes() &&
-            handlerInput.attributesManager.getSessionAttributes().mode === 'name'
-        )
-    }, 
-    handle(handlerInput) {
-             // cancels are handled by built-in intents
-            //  const requestEnvelope = handlerInput.requestEnvelope
-            //  const intent = requestEnvelope.request.intent
-            //  const Name = intent.slots.Name
-             // parse query
-             return handlerInput.responseBuilder.getResponse()
+// const GetNameIntentHandler = {
+//     canHandle(handlerInput) {
+//         return (
+//             handlerInput.attributesManager.getSessionAttributes() &&
+//             handlerInput.attributesManager.getSessionAttributes().mode === 'name'
+//         )
+//     }, 
+//     handle(handlerInput) {
+//              // cancels are handled by built-in intents
+//             //  const requestEnvelope = handlerInput.requestEnvelope
+//             //  const intent = requestEnvelope.request.intent
+//             //  const Name = intent.slots.Name
+//              // parse query
+//              return handlerInput.responseBuilder.getResponse()
         
-    }
-}
+//     }
+// }
 
 const SessionEndedRequestHandler = {
     canHandle(handlerInput) {
@@ -348,10 +348,9 @@ const RequestLog = {
 module.exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         ...require('./builtin-intents.js').intents,
-        ...require('./custom-events.js').events,
-        GetNameIntentHandler,
-        ManualIntentHandler,
-        ManualListenerIntentHandler,
+        // ...require('./custom-events.js').events,
+        // ManualIntentHandler,
+        // ManualListenerIntentHandler,
         TogglePurchasingIntent,
         BobaPurchaseHandler,
         MakeBobaIntentHandler,
