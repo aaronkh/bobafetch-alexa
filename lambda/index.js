@@ -348,7 +348,7 @@ const RequestLog = {
 module.exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         ...require('./builtin-intents.js').intents,
-        // ...require('./custom-events.js').events,
+        ...require('./custom-events.js').events,
         ManualIntentHandler,
         // ManualListenerIntentHandler,
         TogglePurchasingIntent,
