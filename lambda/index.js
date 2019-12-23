@@ -64,6 +64,7 @@ const MakeBobaIntentHandler = {
                 await common.createDrink(tea, sugar, ice)
                 const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
                 persistentAttributes.lastDrink = currentDrink
+                persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
                 handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
                 handlerInput.attributesManager.savePersistentAttributes()
                 return handlerInput.responseBuilder.addDirective({
@@ -72,6 +73,12 @@ const MakeBobaIntentHandler = {
                     expiration: {
                         durationInMilliseconds: 90000,
                     }
+                }).addDirective({
+                    type: "CustomInterfaceController.automatic",
+                    "name": 'name',
+                    "tea": tea,
+                    "sugar": sugar,
+                    "ice": ice
                 }).speak(speakOutput).getResponse()
             }
         } catch (err) {
@@ -99,20 +106,23 @@ const BobaPurchaseHandler = {
 
 
         let speakOutput = ``
+        let currentDrink = undefined
 
         // // IF THE USER DECLINED THE PURCHASE.
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
-            const currentDrink = persistentAttributes.currentDrink
+            currentDrink = persistentAttributes.currentDrink
             await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
             speakOutput = `A ${currentDrink.string} has been added to the queue. See you again soon!`
         } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
             speakOutput = `We couldn't complete your purchase right now. Please try again later.`
-        }
+            return handlerInput.responseBuilder.speak(speakOutput).getResponse()
+        } 
         // // declines are handled automatically by alexa
 
         // // move current drink -> last drink
         persistentAttributes.lastDrink = persistentAttributes.currentDrink
         persistentAttributes.currentDrink = undefined
+        persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
         handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
         handlerInput.attributesManager.savePersistentAttributes()
         return handlerInput.responseBuilder
@@ -123,6 +133,13 @@ const BobaPurchaseHandler = {
                     durationInMilliseconds: 90000,
                 }
             })
+            .addDirective({
+                type: !currentDrink || "CustomInterfaceController.automatic",
+                "name": 'name',
+                "tea": currentDrink.tea,
+                "sugar": currentDrink.sugar,
+                "ice": currentDrink.ice
+            })            
             .speak(speakOutput)
             .getResponse()
     }
@@ -234,7 +251,16 @@ const ManualListenerIntentHandler = {
         const unit = intent.slots.unit
         console.log({action, length, unit})
         // parse query
-        return handlerInput.responseBuilder.reprompt(`${action} ${length} ${unit}`).getResponse()
+        let token = handlerInput.attributesManager.getPersistentAttributes().token || '';
+        return handlerInput.responseBuilder
+        .addDirective({
+            "type": "CustomInterfaceController.manual",
+            "token": token,
+            "num": length,
+            "command": action
+        })
+        .reprompt(`${action} ${length} ${unit}`)
+        .getResponse()
     }
 
 }
