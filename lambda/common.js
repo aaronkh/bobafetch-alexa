@@ -1,5 +1,6 @@
 // This file will contain all non-Alexa functions used by other intents
 // You should NOT import any Alexa-related modules (ask-*)
+const Https = require('https');
 
 const rp = require('request-promise-native')
 const url = 'http://35.230.20.197:5000'
