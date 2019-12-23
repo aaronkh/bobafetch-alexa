@@ -259,7 +259,7 @@ const ManualListenerIntentHandler = {
         // cancels are handled by built-in intents
         try {
             const requestEnvelope = handlerInput.requestEnvelope
-            const intent = requestEnvelope.request.intent || {slots: {Action: {value: 'dispense'}, length: {value: 8}, unit: {value: 'seconds'}}}
+            const intent = requestEnvelope.request.intent || { slots: { Action: { value: 'dispense' }, length: { value: 8 }, unit: { value: 'seconds' } } }
             const action = intent.slots.Action.value
             const length = intent.slots.length.value
             const unit = intent.slots.unit.value
@@ -275,22 +275,16 @@ const ManualListenerIntentHandler = {
                         durationInMilliseconds: 90000,
                     }
                 })
-                .addDirective({
-                    type: 'CustomInterfaceController.SendDirective',
-                    endpoint: {
-                        endpointId:  handlerInput.attributesManager.getSessionAttributes().endpointId // TODO: remove
-                    },
-                    header: {
-                        name: action.toUpperCase(),
-                        namespace: 'Custom.Mindstorms.Gadget'
-                    },
-                    payload: {
+                .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
+
+                    'Custom.Mindstorms.Gadget', action.toUpperCase(),
+                    {
                         "type": "manual",
                         "token": token,
                         "num": length,
                         "command": action
                     }
-                })
+                ))
                 .reprompt(`${action} ${length} ${unit}`)
                 .getResponse()
         } catch (err) {

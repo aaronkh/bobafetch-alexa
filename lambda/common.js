@@ -73,6 +73,23 @@ module.exports.createDrink = async (tea, sugar, ice) => {
     }
 }
 
+exports.build = function (endpointId, namespace, name, payload) {
+    // Construct the custom directive that needs to be sent
+    // Gadget should declare the capabilities in the discovery response to
+    // receive the directives under the following namespace.
+    return {
+        type: 'CustomInterfaceController.SendDirective',
+        header: {
+            name: name,
+            namespace: namespace
+        },
+        endpoint: {
+            endpointId: endpointId
+        },
+        payload
+    };
+}
+
 module.exports.getIsPurchasing = async (handlerInput) => {
     let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
     return persistentAttributes.isPurchasing === true
