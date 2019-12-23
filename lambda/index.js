@@ -246,11 +246,13 @@ const ManualListenerIntentHandler = {
     },
     handle(handlerInput) { // add directive
         // cancels are handled by built-in intents
+        try{
         const requestEnvelope = handlerInput.requestEnvelope
         const intent = requestEnvelope.request.intent
         const action = intent.slots.Action.value
         const length = intent.slots.length.value
         const unit = intent.slots.unit.value
+
         console.log({action, length, unit})
         // parse query
         let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
@@ -270,6 +272,13 @@ const ManualListenerIntentHandler = {
         })
         .reprompt(`${action} ${length} ${unit}`)
         .getResponse()
+    } catch(err) {
+        return handlerInput.responseBuilder
+        .reprompt(`<amazon:emotion name="disappointed" intensity="medium">
+        what?
+    </amazon:emotion>`)
+        .getResponse()
+    }
     }
 
 }
