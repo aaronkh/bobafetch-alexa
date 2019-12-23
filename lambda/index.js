@@ -350,7 +350,7 @@ module.exports.handler = Alexa.SkillBuilders.custom()
         ...require('./builtin-intents.js').intents,
         ...require('./custom-events.js').events,
         ManualIntentHandler,
-        // ManualListenerIntentHandler,
+        ManualListenerIntentHandler,
         TogglePurchasingIntent,
         BobaPurchaseHandler,
         MakeBobaIntentHandler,
