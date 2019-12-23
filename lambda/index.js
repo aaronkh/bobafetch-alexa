@@ -76,7 +76,7 @@ const MakeBobaIntentHandler = {
                     }
                 }).addDirective({
                     type: "automatic",
-                    "name": person? person.personId : undefined,
+                    "name": person ? person.personId : undefined,
                     "tea": tea,
                     "sugar": sugar,
                     "ice": ice
@@ -117,7 +117,7 @@ const BobaPurchaseHandler = {
         } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
             speakOutput = `We couldn't complete your purchase right now. Please try again later.`
             return handlerInput.responseBuilder.speak(speakOutput).getResponse()
-        } 
+        }
         // // declines are handled automatically by alexa
 
         // // move current drink -> last drink
@@ -140,7 +140,7 @@ const BobaPurchaseHandler = {
                 "tea": currentDrink.tea,
                 "sugar": currentDrink.sugar,
                 "ice": currentDrink.ice
-            })            
+            })
             .speak(speakOutput)
             .getResponse()
     }
@@ -218,7 +218,7 @@ const GetQueueIntentHandler = {
     }
 }
 
-const ManualIntentHandler = { 
+const ManualIntentHandler = {
     canHandle(handlerInput) {
         return (
             Alexa.getRequestType(handlerInput.requestEnvelope) ===
@@ -233,12 +233,12 @@ const ManualIntentHandler = {
         sessionAttributes.mode = 'manual'
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         return handlerInput.responseBuilder
-        .speak('Ready').reprompt("Awaiting commands").getResponse()
+            .speak('Ready').reprompt("Awaiting commands").getResponse()
     }
 
 }
 
-const ManualListenerIntentHandler = { 
+const ManualListenerIntentHandler = {
     canHandle(handlerInput) {
         return (
             handlerInput.attributesManager.getSessionAttributes().mode === 'manual'
@@ -246,39 +246,41 @@ const ManualListenerIntentHandler = {
     },
     handle(handlerInput) { // add directive
         // cancels are handled by built-in intents
-        try{
-        const requestEnvelope = handlerInput.requestEnvelope
-        const intent = requestEnvelope.request.intent
-        const action = intent.slots.Action.value
-        const length = intent.slots.length.value
-        const unit = intent.slots.unit.value
+        try {
+            const requestEnvelope = handlerInput.requestEnvelope
+            const intent = requestEnvelope.request.intent
+            const action = intent.slots.Action.value
+            const length = intent.slots.length.value
+            const unit = intent.slots.unit.value
 
-        console.log({action, length, unit})
-        // parse query
-        let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
-        return handlerInput.responseBuilder
-        .addDirective({
-            type: "CustomInterfaceController.StartEventHandler",
-            token: token,
-            expiration: {
-                durationInMilliseconds: 90000,
-            }
-        })
-        .addDirective({
-            "type": "manual",
-            "token": token,
-            "num": length,
-            "command": action
-        })
-        .reprompt(`${action} ${length} ${unit}`)
-        .getResponse()
-    } catch(err) {
-        return handlerInput.responseBuilder
-        .reprompt(`<amazon:emotion name="disappointed" intensity="medium">
+            console.log({ action, length, unit })
+            // parse query
+            let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
+            return handlerInput.responseBuilder
+                .addDirective({
+                    type: "CustomInterfaceController.StartEventHandler",
+                    token: token,
+                    expiration: {
+                        durationInMilliseconds: 90000,
+                    }
+                })
+                .addDirective({
+                    "type": "manual",
+                    "token": token,
+                    "num": length,
+                    "command": action
+                })
+                .reprompt(`poiring`)
+                .getResponse()
+        } catch (err) {
+            console.log(err)
+            return handlerInput.responseBuilder
+                .speak('error')
+                .reprompt(`<amazon:emotion name="disappointed" intensity="medium">
         what?
     </amazon:emotion>`)
-        .getResponse()
-    }
+                .getResponse()
+        }
     }
 
 }
@@ -298,7 +300,7 @@ const ManualListenerIntentHandler = {
 //             //  const Name = intent.slots.Name
 //              // parse query
 //              return handlerInput.responseBuilder.getResponse()
-        
+
 //     }
 // }
 
