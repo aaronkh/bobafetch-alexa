@@ -25,7 +25,7 @@ const MakeBobaIntentHandler = {
         const tea = intent.slots.Tea.value
         const sugar = intent.slots.Sugar.value
         const ice = intent.slots.Ice.value
-        
+
         try {
             let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
 
@@ -66,7 +66,13 @@ const MakeBobaIntentHandler = {
                 persistentAttributes.lastDrink = currentDrink
                 handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
                 handlerInput.attributesManager.savePersistentAttributes()
-                return handlerInput.responseBuilder.speak(speakOutput).getResponse()
+                return handlerInput.responseBuilder.addDirective({
+                    type: "CustomInterfaceController.StartEventHandler",
+                    token: handlerInput.requestEnvelope.request.requestId,
+                    expiration: {
+                        durationInMilliseconds: 90000,
+                    }
+                }).speak(speakOutput).getResponse()
             }
         } catch (err) {
             console.log(err)
@@ -80,7 +86,7 @@ const MakeBobaIntentHandler = {
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
         return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
-        handlerInput.requestEnvelope.request.name === 'Buy')
+            handlerInput.requestEnvelope.request.name === 'Buy')
     },
     async handle(handlerInput) {
         // console.log('handler handler handler handler handler ')
@@ -91,7 +97,7 @@ const BobaPurchaseHandler = {
             return handlerInput.responseBuilder.speak('You somehow completed a purchase without an order').getResponse()
         }
 
-        
+
         let speakOutput = ``
 
         // // IF THE USER DECLINED THE PURCHASE.
@@ -110,6 +116,13 @@ const BobaPurchaseHandler = {
         handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
         handlerInput.attributesManager.savePersistentAttributes()
         return handlerInput.responseBuilder
+            .addDirective({
+                type: "CustomInterfaceController.StartEventHandler",
+                token: handlerInput.requestEnvelope.request.requestId,
+                expiration: {
+                    durationInMilliseconds: 90000,
+                }
+            })
             .speak(speakOutput)
             .getResponse()
     }

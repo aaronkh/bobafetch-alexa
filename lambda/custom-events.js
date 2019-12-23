@@ -26,7 +26,7 @@ const StartInputIntentHandler = {
 //TODO: validate gadgets
 const CupEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') && 
+        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
             handlerInput.requestEnvelope.request.events[0].header.name === 'CUP';
     },
     handle(handlerInput) {
@@ -39,7 +39,7 @@ const CupEventHandler = {
 
 const DoneEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') && 
+        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
             handlerInput.requestEnvelope.request.events[0].header.name === 'DONE';
     },
     handle(handlerInput) {
@@ -47,17 +47,17 @@ const DoneEventHandler = {
         let { request } = handlerInput.requestEnvelope
         let payload = request.events[0].payload;
 
-          return handlerInput.responseBuilder
-          .speak(payload.speak)
+        return handlerInput.responseBuilder
+            .speak(payload.speak)
             .getResponse();
-        
+
     }
 
 }
 
 const PourEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') && 
+        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
             handlerInput.requestEnvelope.request.events[0].header.name === 'POUR';
     },
     handle(handlerInput) {
@@ -65,15 +65,15 @@ const PourEventHandler = {
         let { request } = handlerInput.requestEnvelope
         let payload = request.events[0].payload;
 
-          return handlerInput.responseBuilder
-          .speak(`Pouring ${payload.tea} for ${payload.time_in_s} seconds`)
+        return handlerInput.responseBuilder
+            .speak(`Pouring ${payload.tea} for ${payload.time_in_s} seconds`)
             .getResponse();
     }
 }
 
 const DispenseEventHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') && 
+        return (handlerInput.requestEnvelope.request.type !== 'CustomInterfaceController.EventsReceived') &&
             handlerInput.requestEnvelope.request.events[0].header.name === 'DISPENSE';
     },
     handle(handlerInput) {
@@ -81,8 +81,8 @@ const DispenseEventHandler = {
         let { request } = handlerInput.requestEnvelope
         let payload = request.events[0].payload;
 
-          return handlerInput.responseBuilder
-          .speak(` Dispensing boba for ${payload.cycles} cycles`)
+        return handlerInput.responseBuilder
+            .speak(` Dispensing boba for ${payload.cycles} cycles`)
             .getResponse();
     }
 }
@@ -94,14 +94,26 @@ const ExpiredEventHandler = {
     },
     handle(handlerInput) {
         console.log("== Custom event expiration input ==");
-        let { request } = handlerInput.requestEnvelope;
-        let data = request.expirationPayload.data;
-        let response = handlerInput.responseBuilder
-            .withShouldEndSession(true)
-            .speak(data)
+        // let { request } = handlerInput.requestEnvelope;
+        // let data = request.expirationPayload.data;
+        // let response = handlerInput.responseBuilder
+        //     .withShouldEndSession(true)
+        //     .speak(data)
+        //     .getResponse();
+        // response.directives = response.directives || [];
+        // return response;
+        // Set the token to track the event handler
+
+        // Extends skill session by starting another event handler
+        return handlerInput.responseBuilder
+            .addDirective({
+                type: "CustomInterfaceController.StartEventHandler",
+                token: handlerInput.requestEnvelope.request.requestId,
+                expiration: {
+                    durationInMilliseconds: 90000,
+                }
+            })
             .getResponse();
-        response.directives = response.directives || [];
-        return response;
     }
 }
 
