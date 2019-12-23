@@ -25,6 +25,7 @@ const MakeBobaIntentHandler = {
         const tea = intent.slots.Tea.value
         const sugar = intent.slots.Sugar.value
         const ice = intent.slots.Ice.value
+        const person = handlerInput.requestEnvelope.request.context.System.person
 
         try {
             let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
@@ -75,7 +76,7 @@ const MakeBobaIntentHandler = {
                     }
                 }).addDirective({
                     type: "CustomInterfaceController.automatic",
-                    "name": 'name',
+                    "name": person? person.personId : undefined,
                     "tea": tea,
                     "sugar": sugar,
                     "ice": ice
@@ -239,7 +240,7 @@ const ManualIntentHandler = {
 const ManualListenerIntentHandler = { 
     canHandle(handlerInput) {
         return (
-            handlerInput.attributesManager.getSessionAttributes() === 'manual'
+            handlerInput.attributesManager.getSessionAttributes().mode === 'manual'
         )
     },
     handle(handlerInput) { // add directive
@@ -265,17 +266,18 @@ const ManualListenerIntentHandler = {
 
 }
 
+//TODO: ask for name if person is not recognized
 const GetNameIntentHandler = {
     canHandle(handlerInput) {
         return (
-            handlerInput.attributesManager.getSessionAttributes() === 'name'
+            handlerInput.attributesManager.getSessionAttributes().mode === 'name'
         )
     }, 
     handle(handlerInput) {
              // cancels are handled by built-in intents
-             const requestEnvelope = handlerInput.requestEnvelope
-             const intent = requestEnvelope.request.intent
-             const Name = intent.slots.Name
+            //  const requestEnvelope = handlerInput.requestEnvelope
+            //  const intent = requestEnvelope.request.intent
+            //  const Name = intent.slots.Name
              // parse query
              return handlerInput.responseBuilder.getResponse()
         
