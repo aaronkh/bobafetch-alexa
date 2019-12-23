@@ -229,6 +229,7 @@ const ManualIntentHandler = {
     },
     handle(handlerInput) {
         let sessionAttributes = handlerInput.attributesManager.getSessionAttributes()
+        console.log(sessionAttributes)
         sessionAttributes.mode = 'manual'
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         return handlerInput.responseBuilder
