@@ -253,8 +253,15 @@ const ManualListenerIntentHandler = {
         const unit = intent.slots.unit.value
         console.log({action, length, unit})
         // parse query
-        let token = handlerInput.attributesManager.getPersistentAttributes().token || '';
+        let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
         return handlerInput.responseBuilder
+        .addDirective({
+            type: "CustomInterfaceController.StartEventHandler",
+            token: token,
+            expiration: {
+                durationInMilliseconds: 90000,
+            }
+        })
         .addDirective({
             "type": "manual",
             "token": token,
