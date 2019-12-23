@@ -200,6 +200,44 @@ const GetQueueIntentHandler = {
     }
 }
 
+const ManualIntentHandler = { 
+    canHandle(handlerInput) {
+        return (
+            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+            'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+            'ManualIntent'
+        )
+    },
+    handle(handlerInput) {
+        return handlerInput.responseBuilder  .addDelegateDirective({
+            name: 'ManualListenerIntent',
+            confirmationStatus: 'NONE',
+            slots: {}
+          }).reprompt("Awaiting commands").getResponse()
+    }
+
+}
+
+const ManualListenerIntentHandler = { 
+    canHandle(handlerInput) {
+        return (
+            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+            'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+            'ManualListenerIntent'
+        )
+    },
+    handle(handlerInput) { // add directive
+        const requestEnvelope = handlerInput.requestEnvelope
+        const intent = requestEnvelope.request.intent
+        const query = intent.slots.literal
+        // parse query
+        return handlerInput.responseBuilder.reprompt("Awaiting commands").getResponse()
+    }
+
+}
+
 const SessionEndedRequestHandler = {
     canHandle(handlerInput) {
         return (
@@ -268,6 +306,8 @@ module.exports.handler = Alexa.SkillBuilders.custom()
         MakeBobaIntentHandler,
         GetQueueIntentHandler,
         GetLastDrinkIntentHandler,
+        ManualIntentHandler,
+        ManualListenerIntentHandler,
         SessionEndedRequestHandler,
         IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
     )
