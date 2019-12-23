@@ -8,6 +8,42 @@ module.exports.YES_INTENTS = {
     LAST_DRINK_CONFIRMATION: 'LAST_DRINK_CONFIRMATION'
 }
 
+module.exports.getConnectedEndpoints = function(apiEndpoint, apiAccessToken) {
+
+    // The preceding https:// need to be stripped off before making the call
+    apiEndpoint = (apiEndpoint || '').replace('https://', '');
+
+    return new Promise(((resolve, reject) => {
+
+        const options = {
+            host: apiEndpoint,
+            path: '/v1/endpoints',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + apiAccessToken
+            }
+        };
+
+        const request = Https.request(options, (response) => {
+            response.setEncoding('utf8');
+            let returnData = '';
+            response.on('data', (chunk) => {
+                returnData += chunk;
+            });
+
+            response.on('end', () => {
+                resolve(JSON.parse(returnData));
+            });
+
+            response.on('error', (error) => {
+                reject(error);
+            });
+        });
+        request.end();
+    }));
+};
+
 module.exports.getISPListByName = async (monetizationService, name, locale) => {
     if(!locale) locale = 'en-US'
     let isps = await monetizationService.getInSkillProducts(locale)
