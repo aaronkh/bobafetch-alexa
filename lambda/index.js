@@ -248,7 +248,7 @@ const ManualListenerIntentHandler = {
         // cancels are handled by built-in intents
         try {
             const requestEnvelope = handlerInput.requestEnvelope
-            const intent = requestEnvelope.request.intent
+            const intent = requestEnvelope.request.intent || {slots: {Action: {value: 'dispense'}, length: {value: 8}, unit: {value: 'seconds'}}}
             const action = intent.slots.Action.value
             const length = intent.slots.length.value
             const unit = intent.slots.unit.value
