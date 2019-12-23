@@ -277,7 +277,7 @@ const ManualListenerIntentHandler = {
             
             return handlerInput.responseBuilder
                 .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
-                    'Custom.Mindstorms.Gadget', action.toUpperCase(),
+                    'Custom.Mindstorms.Gadget', 'control',
                     {
                         "type": "manual",
                         "num": length,
