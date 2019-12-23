@@ -265,12 +265,14 @@ const ManualListenerIntentHandler = {
                     }
                 })
                 .addDirective({
+                    type: 'CustomInterfaceController.SendDirective',
+                    payload: {
                     "type": "manual",
                     "token": token,
                     "num": length,
-                    "command": action
+                    "command": action}
                 })
-                .reprompt(`poiring`)
+                .reprompt(`${action} ${length} ${unit}`)
                 .getResponse()
         } catch (err) {
             console.log(err)
