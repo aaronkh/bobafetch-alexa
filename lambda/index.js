@@ -25,7 +25,7 @@ const MakeBobaIntentHandler = {
         const tea = intent.slots.Tea.value
         const sugar = intent.slots.Sugar.value
         const ice = intent.slots.Ice.value
-
+        
         try {
             let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
 
@@ -55,7 +55,6 @@ const MakeBobaIntentHandler = {
                             },
                             token: "correlationToken"
                         })
-                        .withSimpleCard('Title', 'Content')
                         .getResponse()
                 } else {
                     return handlerInput.responseBuilder
@@ -71,7 +70,6 @@ const MakeBobaIntentHandler = {
             }
         } catch (err) {
             console.log(err)
-
             return handlerInput.responseBuilder
                 .speak('Something went wrong. Please try again')
                 .getResponse()
@@ -251,6 +249,7 @@ const RequestLog = {
 module.exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         ...require('./builtin-intents.js').intents,
+        ...require('./custom-events.js').events,
         TogglePurchasingIntent,
         BobaPurchaseHandler,
         MakeBobaIntentHandler,
