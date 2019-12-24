@@ -90,8 +90,7 @@ const LaunchRequestHandler = {
         )
     },
     handle(handlerInput) {
-        const speakOutput =
-            'Yeet'
+        const speakOutput = `I'm Boba fetch, what's your order?`
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
