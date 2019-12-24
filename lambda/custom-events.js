@@ -23,12 +23,12 @@ const DoneEventHandler = {
     },
     handle(handlerInput) {
         console.log("== Received custom event == DONE");
-        let { request } = handlerInput.requestEnvelope
-        console.log(request)
-        let payload = request.events[0].payload
+        console.log(handlerInput.requestEnvelope.request.events[0])
+        let payload = handlerInput.requestEnvelope.request.events[0].payload
         let ssml = `Hello, your ${payload.tea} with ${payload.sugar} percent sugar and ${payload.ice} percent ice is finished. Please come pick it up!`
+        console.log(ssml)
         return handlerInput.responseBuilder
-            .speak(`<amazon:emotion name="excited" intensity="high">${ssml}</amazon:effect></<amazon:emotion>`)
+            .speak(`<amazon:emotion name="excited" intensity="high">${ssml}</amazon:emotion>`)
             .getResponse();
     }
 
