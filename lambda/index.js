@@ -260,7 +260,7 @@ const ManualIntentHandler = {
             "command": 'dispense'
         }
     ))
-            .speak('Ready').reprompt("Awaiting commands").getResponse()
+            .getResponse()
     }
 
 }
