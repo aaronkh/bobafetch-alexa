@@ -244,23 +244,16 @@ const ManualIntentHandler = {
         let endpointId = apiResponse.endpoints[0].endpointId
         sessionAttributes.endpointId = endpointId
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
-        // let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
+        let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
+        
         return handlerInput.responseBuilder
-            // .addDirective({
-            //     type: "CustomInterfaceController.StartEventHandler",
-            //     token: token,
-            //     expiration: {
-            //         durationInMilliseconds: 90000,
-            //     }
-            // })
-            .addDirective(common.build(endpointId,
-                'Custom.Mindstorms.Gadget', 'control',
-                {
-                    "type": "manual",
-                    "num": 8,
-                    "command": 'dispense'
+            .addDirective({
+                type: "CustomInterfaceController.StartEventHandler",
+                token: token,
+                expiration: {
+                    durationInMilliseconds: 90000,
                 }
-            ))
+            })
             .getResponse()
     }
 
