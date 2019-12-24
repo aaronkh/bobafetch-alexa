@@ -2,20 +2,16 @@
 // You should NOT import any Alexa-related modules (ask-*)
 const Https = require('https');
 
-const rp = require('request-promise-native')
-const url = 'http://35.230.20.197:5000'
-
 module.exports.YES_INTENTS = {
     LAST_DRINK_CONFIRMATION: 'LAST_DRINK_CONFIRMATION'
 }
 
-module.exports.getConnectedEndpoints = function(apiEndpoint, apiAccessToken) {
 
+// @source https://www.hackster.io/alexagadgets/lego-mindstorms-voice-challenge-setup-17300f
+module.exports.getConnectedEndpoints = function(apiEndpoint, apiAccessToken) {
     // The preceding https:// need to be stripped off before making the call
     apiEndpoint = (apiEndpoint || '').replace('https://', '');
-
     return new Promise(((resolve, reject) => {
-
         const options = {
             host: apiEndpoint,
             path: '/v1/endpoints',
@@ -25,7 +21,6 @@ module.exports.getConnectedEndpoints = function(apiEndpoint, apiAccessToken) {
                 'Authorization': 'Bearer ' + apiAccessToken
             }
         };
-
         const request = Https.request(options, (response) => {
             response.setEncoding('utf8');
             let returnData = '';
@@ -45,13 +40,7 @@ module.exports.getConnectedEndpoints = function(apiEndpoint, apiAccessToken) {
     }));
 };
 
-module.exports.getISPListByName = async (monetizationService, name, locale) => {
-    if(!locale) locale = 'en-US'
-    let isps = await monetizationService.getInSkillProducts(locale)
-    console.log(isps.inSkillProducts)
-    return isps.inSkillProducts.filter(item => item.referenceName === name)
-}
-
+// @source https://www.hackster.io/alexagadgets/lego-mindstorms-voice-challenge-setup-17300f
 exports.build = function (endpointId, namespace, name, payload) {
     // Construct the custom directive that needs to be sent
     // Gadget should declare the capabilities in the discovery response to
@@ -69,11 +58,21 @@ exports.build = function (endpointId, namespace, name, payload) {
     };
 }
 
+// gets all items that can be bought as an In-skill purchase
+module.exports.getISPListByName = async (monetizationService, name, locale) => {
+    if(!locale) locale = 'en-US'
+    let isps = await monetizationService.getInSkillProducts(locale)
+    console.log(isps.inSkillProducts)
+    return isps.inSkillProducts.filter(item => item.referenceName === name)
+}
+
+// true if purchasing is set to on
 module.exports.getIsPurchasing = async (handlerInput) => {
     let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
     return persistentAttributes.isPurchasing === true
 }
 
+// getting the queue...
 module.exports.getQueue = async (handlerInput) => {
     return await handlerInput.attributesManager.getPersistentAttributes().queue
 }

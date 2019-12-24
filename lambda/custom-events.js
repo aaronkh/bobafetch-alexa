@@ -1,3 +1,5 @@
+const common = require('./common.js')
+
 //TODO: validate gadgets
 const CupEventHandler = {
     canHandle(handlerInput) {
@@ -26,7 +28,7 @@ const DoneEventHandler = {
         console.log(handlerInput.requestEnvelope.request.events[0])
         let payload = handlerInput.requestEnvelope.request.events[0].payload
         let ssml = `Hello, your ${payload.tea} with ${payload.sugar} percent sugar and ${payload.ice} percent ice is finished. Please come pick it up!`
-        console.log(ssml)
+        common.dequeue(handlerInput)
         return handlerInput.responseBuilder
             .speak(`<amazon:emotion name="excited" intensity="high">${ssml}</amazon:emotion>`)
             .getResponse();
@@ -77,15 +79,6 @@ const ExpiredEventHandler = {
     },
     handle(handlerInput) {
         console.log("== Custom event expiration input ==");
-        // let { request } = handlerInput.requestEnvelope;
-        // let data = request.expirationPayload.data;
-        // let response = handlerInput.responseBuilder
-        //     .withShouldEndSession(true)
-        //     .speak(data)
-        //     .getResponse();
-        // response.directives = response.directives || [];
-        // return response;
-        // Set the token to track the event handler
 
         // Extends skill session by starting another event handler
         return handlerInput.responseBuilder

@@ -68,6 +68,11 @@ const MakeBobaIntentHandler = {
                 persistentAttributes.lastDrink = currentDrink
                 persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
                 
+                await common.enqueue({
+                    "name": person? person.personId : 'Anonymous',
+                    "string": currentDrink.string
+                })
+
                 let request = handlerInput.requestEnvelope;
                 let { apiEndpoint, apiAccessToken } = request.context.System;
                 let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
@@ -132,7 +137,6 @@ const BobaPurchaseHandler = {
         let speakOutput = ``
         let currentDrink = undefined
 
-        // // IF THE USER DECLINED THE PURCHASE.
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
             currentDrink = persistentAttributes.currentDrink
             speakOutput = `A ${currentDrink.string} has been added to the queue. See you again soon!`
@@ -148,6 +152,11 @@ const BobaPurchaseHandler = {
         persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
         handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
         handlerInput.attributesManager.savePersistentAttributes()
+
+        await common.enqueue({
+            "name": person? person.personId : 'Anonymous',
+            "string": currentDrink.string
+        })
 
         let endpointId = persistentAttributes.endpointId
         let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
@@ -244,8 +253,14 @@ const GetQueueIntentHandler = {
             'GetQueueIntent'
         )
     },
-    handle(handlerInput) {
-        return handlerInput.responseBuilder.speak('Queue').getResponse()
+    async handle(handlerInput) {
+        let queue = await common.getQueue(handlerInput)
+        let output = `There are ${queue.length} items in the queue: `
+        for(let i = 0; i < queue.length; i++) {
+            output += `${queue[i].string} ${queue[i].name === 'Anonymous'? '':`for <alexa:name type="first" personId="${queue[i]}"/>`},`
+        }
+
+        return handlerInput.responseBuilder.speak(output).getResponse()
     }
 }
 
@@ -293,65 +308,31 @@ const ManualIntentHandler = {
 
 const ManualListenerIntentHandler = {
     canHandle(handlerInput) {
-        return (
-            handlerInput.attributesManager.getSessionAttributes().mode === 'manual'
-        )
+        return handlerInput.attributesManager.getSessionAttributes().mode === 'manual'
     },
     handle(handlerInput) { // add directive
         // cancels are handled by built-in intents
-        try {
-            const requestEnvelope = handlerInput.requestEnvelope
-            const intent = requestEnvelope.request.intent || { slots: { Action: { value: 'dispense' }, length: { value: 8 }, unit: { value: 'seconds' } } }
-            const action = intent.slots.Action.value
-            const length = intent.slots.length.value
-            const unit = intent.slots.unit.value
+        const requestEnvelope = handlerInput.requestEnvelope
+        const intent = requestEnvelope.request.intent || { slots: { Action: { value: 'dispense' }, length: { value: 8 }, unit: { value: 'seconds' } } }
+        const action = intent.slots.Action.value
+        const length = intent.slots.length.value
+        const unit = intent.slots.unit.value
 
-            console.log({ action, length, unit })
-            // parse query
-
-            return handlerInput.responseBuilder
-                .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
-                    'Custom.Mindstorms.Gadget', 'control',
-                    {
-                        "type": "manual",
-                        "num": length,
-                        "command": action
-                    }
-                ))
-                .speak(`${action} ${length} ${unit}`)
-                .reprompt(`Awaiting commands`)
-                .getResponse()
-        } catch (err) {
-            console.log(err)
-            return handlerInput.responseBuilder
-                .speak('error')
-                .reprompt(`<amazon:emotion name="disappointed" intensity="medium">
-        what?
-    </amazon:emotion>`)
-                .getResponse()
-        }
+        return handlerInput.responseBuilder
+            .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
+                'Custom.Mindstorms.Gadget', 'control',
+                {
+                    "type": "manual",
+                    "num": length,
+                    "command": action
+                }
+            ))
+            .speak(`${action} ${length} ${unit}`)
+            .reprompt(`Awaiting commands`)
+            .getResponse()
     }
 
 }
-
-//TODO: ask for name if person is not recognized
-// const GetNameIntentHandler = {
-//     canHandle(handlerInput) {
-//         return (
-//             handlerInput.attributesManager.getSessionAttributes() &&
-//             handlerInput.attributesManager.getSessionAttributes().mode === 'name'
-//         )
-//     }, 
-//     handle(handlerInput) {
-//              // cancels are handled by built-in intents
-//             //  const requestEnvelope = handlerInput.requestEnvelope
-//             //  const intent = requestEnvelope.request.intent
-//             //  const Name = intent.slots.Name
-//              // parse query
-//              return handlerInput.responseBuilder.getResponse()
-
-//     }
-// }
 
 const SessionEndedRequestHandler = {
     canHandle(handlerInput) {
@@ -384,7 +365,6 @@ const IntentReflectorHandler = {
         return (
             handlerInput.responseBuilder
                 .speak(speakOutput)
-                //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
                 .getResponse()
         )
     }

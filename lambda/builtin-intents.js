@@ -7,7 +7,6 @@ const YesIntentHandler = {
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
     },
     async handle(handlerInput) {
-        console.log('Is this Intent being triggered?')
         let sessionAttributes = await handlerInput.attributesManager.getSessionAttributes()
         let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
         let yesIntent = sessionAttributes.yesIntent
@@ -15,9 +14,47 @@ const YesIntentHandler = {
             case common.YES_INTENTS.LAST_DRINK_CONFIRMATION:
                 try{
                     let drinkObject = persistentAttributes.lastDrink
-                    await common.createDrink(drinkObject.tea, drinkObject.sugar, drinkObject.ice)
                     let drinkString = persistentAttributes.lastDrink.string
-                    return handlerInput.responseBuilder.speak(`Okay, one ${drinkString} coming right up`).getResponse()
+                    await common.enqueue({
+                        string: drinkString,
+                        name: "Anonymous"
+                    })
+                    let request = handlerInput.requestEnvelope;
+                    let { apiEndpoint, apiAccessToken } = request.context.System;
+                    let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
+                    if ((apiResponse.endpoints || []).length === 0) {
+                        return handlerInput.responseBuilder
+                            .speak("Please find a connected device and try again.")
+                            .getResponse();
+                    }
+                    
+                    let endpointId = apiResponse.endpoints[0].endpointId
+                    persistentAttributes.endpointId = endpointId
+                    let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
+    
+                    handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+                    handlerInput.attributesManager.savePersistentAttributes()
+
+                    return handlerInput.responseBuilder
+                        .addDirective({
+                            type: "CustomInterfaceController.StartEventHandler",
+                            token: token,
+                            expiration: {
+                                durationInMilliseconds: 90000,
+                            }
+                        })
+                        .addDirective(common.build(endpointId,
+                            'Custom.Mindstorms.Gadget', 'control',
+                            {
+                                "type": "automatic",
+                                "name": 'Anonymous',
+                                "tea": drinkObject.tea,
+                                "sugar": drinkObject.sugar,
+                                "ice": drinkObject.ice
+                            }
+                        ))
+                        .speak(`Okay, one ${drinkString} coming right up`)
+                        .getResponse()
                 } catch(e) {
                     console.log(e)
                     return handlerInput.responseBuilder
@@ -34,10 +71,8 @@ const YesIntentHandler = {
 
 const NoIntentHandler = {
     canHandle(handlerInput) {
-        // const attributes = handlerInput.attributesManager.getSessionAttributes()
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent'
-            // && attributes.state === YES_SESSION_STATE // expecting a yes/no question
     },
     async handle(handlerInput) {
         return handlerInput.responseBuilder // clears sessions as well
