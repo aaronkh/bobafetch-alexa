@@ -227,21 +227,22 @@ const ManualIntentHandler = {
             'ManualIntent'
         )
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
         let sessionAttributes = handlerInput.attributesManager.getSessionAttributes()
         console.log(sessionAttributes)
         sessionAttributes.mode = 'manual'
         let request = handlerInput.requestEnvelope;
 
         let { apiEndpoint, apiAccessToken } = request.context.System;
-        let apiResponse = common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
+        let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
         if ((apiResponse.endpoints || []).length === 0) {
             return handlerInput.responseBuilder
                 .speak("Please find a connected device and try again.")
                 .getResponse();
         }
-        // eslint-disable-next-line require-atomic-updates
-        handlerInput.attributesManager.endpointId = apiResponse.endpoints[0].endpointId || [];
+        
+        let endpointId = apiResponse.endpoints[0].endpointId
+        sessionAttributes.endpointId = endpointId
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         // let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
         return handlerInput.responseBuilder
@@ -252,7 +253,7 @@ const ManualIntentHandler = {
             //         durationInMilliseconds: 90000,
             //     }
             // })
-            .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
+            .addDirective(common.build(endpointId,
                 'Custom.Mindstorms.Gadget', 'control',
                 {
                     "type": "manual",
