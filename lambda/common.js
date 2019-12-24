@@ -52,27 +52,6 @@ module.exports.getISPListByName = async (monetizationService, name, locale) => {
     return isps.inSkillProducts.filter(item => item.referenceName === name)
 }
 
-module.exports.createDrink = async (tea, sugar, ice) => {
-    console.log('create drink called with ' + `${tea} ${sugar} ${ice}`)
-    try {
-        const body = {
-            options: {
-                tea: tea,
-                sugar: parseInt(sugar),
-                ice: parseInt(ice)
-            }
-        }
-        await rp({
-            method: 'POST',
-            uri: `${url}/queue`,
-            body: body,
-            json: true
-        })
-    } catch (e) {
-        throw new Error(e)
-    }
-}
-
 exports.build = function (endpointId, namespace, name, payload) {
     // Construct the custom directive that needs to be sent
     // Gadget should declare the capabilities in the discovery response to
