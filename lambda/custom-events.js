@@ -28,7 +28,7 @@ const DoneEventHandler = {
         let ssml = `Hello, your ${payload.tea} with ${payload.sugar} percent sugar and ${payload.ice} percent ice is finished. Please come pick it up!`
         console.log(ssml)
         return handlerInput.responseBuilder
-            .speak(`<amazon:emotion name="excited" intensity="high">${ssml}</<amazon:emotion>`)
+            .speak(`<amazon:emotion name="excited" intensity="high">${ssml}</amazon:emotion>`)
             .getResponse();
     }
 
