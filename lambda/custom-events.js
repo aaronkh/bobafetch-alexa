@@ -26,8 +26,7 @@ const DoneEventHandler = {
         let { request } = handlerInput.requestEnvelope
         console.log(request)
         let payload = request.events[0].payload
-        let ssml = `Hello ${payload.name === 'Anonymous'? '' : `<alexa:name type="first" personId="${payload.name}"/>`}, `
-        ssml += `your ${payload.tea} with ${payload.sugar} percent sugar and ${payload.ice} percent ice is finished. Please come pick it up!`
+        let ssml = `Hello, your ${payload.tea} with ${payload.sugar} percent sugar and ${payload.ice} percent ice is finished. Please come pick it up!`
         return handlerInput.responseBuilder
             .speak(`<speak><amazon:emotion name="excited" intensity="high">${ssml}</amazon:effect></speak>`)
             .getResponse();
