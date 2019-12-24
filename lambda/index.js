@@ -27,6 +27,8 @@ const MakeBobaIntentHandler = {
         const ice = intent.slots.Ice.value
         const person = handlerInput.requestEnvelope.context.System.person
 
+        console.log(person)
+        
         try {
             let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
 
