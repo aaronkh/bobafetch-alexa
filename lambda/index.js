@@ -82,22 +82,25 @@ const MakeBobaIntentHandler = {
                 handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
                 handlerInput.attributesManager.savePersistentAttributes()
                 
-                return handlerInput.responseBuilder.addDirective({
-                    type: "CustomInterfaceController.StartEventHandler",
-                    token: token,
-                    expiration: {
-                        durationInMilliseconds: 90000,
-                    }
-                }).addDirective(common.build(endpointId,
-                    'Custom.Mindstorms.Gadget', 'control',
-                    {
-                        "type": "automatic",
-                        "name": person ? person.personId : 'Anonymous',
-                        "tea": tea,
-                        "sugar": sugar,
-                        "ice": ice
-                    }
-                )).speak(speakOutput).getResponse()
+                return handlerInput.responseBuilder
+                // .addDirective({
+                //     type: "CustomInterfaceController.StartEventHandler",
+                //     token: token,
+                //     expiration: {
+                //         durationInMilliseconds: 90000,
+                //     }
+                // })
+                // .addDirective(common.build(endpointId,
+                //     'Custom.Mindstorms.Gadget', 'control',
+                //     {
+                //         "type": "automatic",
+                //         "name": person ? person.personId : 'Anonymous',
+                //         "tea": tea,
+                //         "sugar": sugar,
+                //         "ice": ice
+                //     }
+                // ))
+                .speak(speakOutput).getResponse()
             }
         } catch (err) {
             console.log(err)
