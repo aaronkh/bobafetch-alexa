@@ -276,14 +276,14 @@ const ManualListenerIntentHandler = {
             // parse query
             
             return handlerInput.responseBuilder
-                .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
-                    'Custom.Mindstorms.Gadget', 'control',
-                    {
-                        "type": "manual",
-                        "num": length,
-                        "command": action
-                    }
-                ))
+                // .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
+                //     'Custom.Mindstorms.Gadget', 'control',
+                //     {
+                //         "type": "manual",
+                //         "num": length,
+                //         "command": action
+                //     }
+                // ))
                 .reprompt(`${action} ${length} ${unit}`)
                 .getResponse()
         } catch (err) {
