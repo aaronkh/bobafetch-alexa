@@ -147,6 +147,8 @@ const BobaPurchaseHandler = {
         let endpointId = persistentAttributes.endpointId
         let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
 
+        const person = handlerInput.requestEnvelope.context.System.person
+
         return handlerInput.responseBuilder
             .addDirective({
                 type: "CustomInterfaceController.StartEventHandler",
@@ -159,7 +161,7 @@ const BobaPurchaseHandler = {
                     'Custom.Mindstorms.Gadget', 'control',
                     {
                         "type": !currentDrink || "automatic",
-                        "name": 'name',
+                        "name": person? person.personId : 'Anonymous',
                         "tea": currentDrink.tea,
                         "sugar": currentDrink.sugar,
                         "ice": currentDrink.ice
