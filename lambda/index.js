@@ -254,6 +254,7 @@ const ManualIntentHandler = {
                     durationInMilliseconds: 90000,
                 }
             })
+            .reprompt('Awaiting commands')
             .getResponse()
     }
 
