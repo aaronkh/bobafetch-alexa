@@ -109,8 +109,9 @@ const MakeBobaIntentHandler = {
 
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
-        return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
-            handlerInput.requestEnvelope.request.name === 'Buy')
+        // return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
+        //     handlerInput.requestEnvelope.request.name === 'Buy')
+        return false
     },
     async handle(handlerInput) {
         // console.log('handler handler handler handler handler ')
@@ -128,7 +129,6 @@ const BobaPurchaseHandler = {
         // // IF THE USER DECLINED THE PURCHASE.
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
             currentDrink = persistentAttributes.currentDrink
-            await common.createDrink(currentDrink.tea, currentDrink.sugar, currentDrink.ice)
             speakOutput = `A ${currentDrink.string} has been added to the queue. See you again soon!`
         } else if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ERROR') {
             speakOutput = `We couldn't complete your purchase right now. Please try again later.`
