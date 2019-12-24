@@ -62,7 +62,7 @@ const MakeBobaIntentHandler = {
                         .speak(`Sorry, there was a problem purchasing your drink.`).getResponse()
                 }
             } else {
-                const speakOutput = ` Okay ${person ? '' : `<alexa:name type="first" personId="${person.personId}"/>`}, One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
+                const speakOutput = ` Okay ${person ? `<alexa:name type="first" personId="${person.personId}"/>`:''}, One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
                 persistentAttributes.lastDrink = currentDrink
                 persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
                 
