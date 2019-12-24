@@ -25,7 +25,7 @@ const MakeBobaIntentHandler = {
         const tea = intent.slots.Tea.value
         const sugar = intent.slots.Sugar.value
         const ice = intent.slots.Ice.value
-        const person = handlerInput.requestEnvelope.request.context.System.person
+        const person = handlerInput.requestEnvelope.context.System.person
 
         try {
             let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes()
