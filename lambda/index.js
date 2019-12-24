@@ -62,12 +62,10 @@ const MakeBobaIntentHandler = {
                         .speak(`Sorry, there was a problem purchasing your drink.`).getResponse()
                 }
             } else {
-                await common.createDrink(tea, sugar, ice)
                 const speakOutput = `One ${tea} with ${sugar} percent sweetness and ${ice} percent ice coming right up.`
                 persistentAttributes.lastDrink = currentDrink
                 persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
-                handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
-                handlerInput.attributesManager.savePersistentAttributes()
+                
                 let request = handlerInput.requestEnvelope;
                 let { apiEndpoint, apiAccessToken } = request.context.System;
                 let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
@@ -78,8 +76,11 @@ const MakeBobaIntentHandler = {
                 }
                 
                 let endpointId = apiResponse.endpoints[0].endpointId
+                persistentAttributes.endpointId = endpointId
                 let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
 
+                handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
+                handlerInput.attributesManager.savePersistentAttributes()
                 
                 return handlerInput.responseBuilder.addDirective({
                     type: "CustomInterfaceController.StartEventHandler",
@@ -109,9 +110,9 @@ const MakeBobaIntentHandler = {
 
 const BobaPurchaseHandler = {
     canHandle(handlerInput) {
-        // return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
-        //     handlerInput.requestEnvelope.request.name === 'Buy')
-        return false
+        return (handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
+            handlerInput.requestEnvelope.request.name === 'Buy')
+        // return false
     },
     async handle(handlerInput) {
         // console.log('handler handler handler handler handler ')
@@ -143,16 +144,7 @@ const BobaPurchaseHandler = {
         handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
         handlerInput.attributesManager.savePersistentAttributes()
 
-        let request = handlerInput.requestEnvelope;
-        let { apiEndpoint, apiAccessToken } = request.context.System;
-        let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
-        if ((apiResponse.endpoints || []).length === 0) {
-            return handlerInput.responseBuilder
-                .speak("Please find a connected device and try again.")
-                .getResponse();
-        }
-        
-        let endpointId = apiResponse.endpoints[0].endpointId
+        let endpointId = persistentAttributes.endpointId
         let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
 
         return handlerInput.responseBuilder
