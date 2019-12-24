@@ -68,19 +68,35 @@ const MakeBobaIntentHandler = {
                 persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
                 handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
                 handlerInput.attributesManager.savePersistentAttributes()
+                let request = handlerInput.requestEnvelope;
+                let { apiEndpoint, apiAccessToken } = request.context.System;
+                let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
+                if ((apiResponse.endpoints || []).length === 0) {
+                    return handlerInput.responseBuilder
+                        .speak("Please find a connected device and try again.")
+                        .getResponse();
+                }
+                
+                let endpointId = apiResponse.endpoints[0].endpointId
+                let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
+
+                
                 return handlerInput.responseBuilder.addDirective({
                     type: "CustomInterfaceController.StartEventHandler",
-                    token: handlerInput.requestEnvelope.request.requestId,
+                    token: token,
                     expiration: {
                         durationInMilliseconds: 90000,
                     }
-                }).addDirective({
-                    type: "automatic",
-                    "name": person ? person.personId : undefined,
-                    "tea": tea,
-                    "sugar": sugar,
-                    "ice": ice
-                }).speak(speakOutput).getResponse()
+                }).addDirective(common.build(endpointId,
+                    'Custom.Mindstorms.Gadget', 'control',
+                    {
+                        type: "automatic",
+                        "name": person ? person.personId : undefined,
+                        "tea": tea,
+                        "sugar": sugar,
+                        "ice": ice
+                    }
+                )).speak(speakOutput).getResponse()
             }
         } catch (err) {
             console.log(err)
@@ -126,21 +142,37 @@ const BobaPurchaseHandler = {
         persistentAttributes.token = handlerInput.requestEnvelope.request.requestId
         handlerInput.attributesManager.setPersistentAttributes(persistentAttributes)
         handlerInput.attributesManager.savePersistentAttributes()
+
+        let request = handlerInput.requestEnvelope;
+        let { apiEndpoint, apiAccessToken } = request.context.System;
+        let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
+        if ((apiResponse.endpoints || []).length === 0) {
+            return handlerInput.responseBuilder
+                .speak("Please find a connected device and try again.")
+                .getResponse();
+        }
+        
+        let endpointId = apiResponse.endpoints[0].endpointId
+        let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
+
         return handlerInput.responseBuilder
             .addDirective({
                 type: "CustomInterfaceController.StartEventHandler",
-                token: handlerInput.requestEnvelope.request.requestId,
+                token: token,
                 expiration: {
                     durationInMilliseconds: 90000,
                 }
             })
-            .addDirective({
-                type: !currentDrink || "automatic",
-                "name": 'name',
-                "tea": currentDrink.tea,
-                "sugar": currentDrink.sugar,
-                "ice": currentDrink.ice
-            })
+            .addDirective(common.build(endpointId,
+                    'Custom.Mindstorms.Gadget', 'control',
+                    {
+                        type: !currentDrink || "automatic",
+                        "name": 'name',
+                        "tea": currentDrink.tea,
+                        "sugar": currentDrink.sugar,
+                        "ice": currentDrink.ice
+                    }
+                ))
             .speak(speakOutput)
             .getResponse()
     }
@@ -288,7 +320,7 @@ const ManualListenerIntentHandler = {
                     }
                 ))
                 .speak(`${action} ${length} ${unit}`)
-                .reprompt(`${action} ${length} ${unit}`)
+                .reprompt(`Awaiting commands`)
                 .getResponse()
         } catch (err) {
             console.log(err)
