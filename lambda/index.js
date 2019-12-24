@@ -227,14 +227,14 @@ const ManualIntentHandler = {
             'ManualIntent'
         )
     },
-    async handle(handlerInput) {
+    handle(handlerInput) {
         let sessionAttributes = handlerInput.attributesManager.getSessionAttributes()
         console.log(sessionAttributes)
         sessionAttributes.mode = 'manual'
         let request = handlerInput.requestEnvelope;
 
         let { apiEndpoint, apiAccessToken } = request.context.System;
-        let apiResponse = await common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
+        let apiResponse = common.getConnectedEndpoints(apiEndpoint, apiAccessToken);
         if ((apiResponse.endpoints || []).length === 0) {
             return handlerInput.responseBuilder
                 .speak("Please find a connected device and try again.")
@@ -245,21 +245,21 @@ const ManualIntentHandler = {
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes)
         // let token = handlerInput.attributesManager.getPersistentAttributes().token || handlerInput.requestEnvelope.request.requestId;
         return handlerInput.responseBuilder
-        // .addDirective({
-        //     type: "CustomInterfaceController.StartEventHandler",
-        //     token: token,
-        //     expiration: {
-        //         durationInMilliseconds: 90000,
-        //     }
-        // })
-        .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
-        'Custom.Mindstorms.Gadget', 'control',
-        {
-            "type": "manual",
-            "num": 8,
-            "command": 'dispense'
-        }
-    ))
+            // .addDirective({
+            //     type: "CustomInterfaceController.StartEventHandler",
+            //     token: token,
+            //     expiration: {
+            //         durationInMilliseconds: 90000,
+            //     }
+            // })
+            .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
+                'Custom.Mindstorms.Gadget', 'control',
+                {
+                    "type": "manual",
+                    "num": 8,
+                    "command": 'dispense'
+                }
+            ))
             .getResponse()
     }
 
@@ -282,7 +282,7 @@ const ManualListenerIntentHandler = {
 
             console.log({ action, length, unit })
             // parse query
-            
+
             return handlerInput.responseBuilder
                 .addDirective(common.build(handlerInput.attributesManager.getSessionAttributes().endpointId,
                     'Custom.Mindstorms.Gadget', 'control',
