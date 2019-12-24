@@ -91,8 +91,8 @@ const MakeBobaIntentHandler = {
                 }).addDirective(common.build(endpointId,
                     'Custom.Mindstorms.Gadget', 'control',
                     {
-                        type: "automatic",
-                        "name": person ? person.personId : undefined,
+                        "type": "automatic",
+                        "name": person ? person.personId : 'Anonymous',
                         "tea": tea,
                         "sugar": sugar,
                         "ice": ice
@@ -158,7 +158,7 @@ const BobaPurchaseHandler = {
             .addDirective(common.build(endpointId,
                     'Custom.Mindstorms.Gadget', 'control',
                     {
-                        type: !currentDrink || "automatic",
+                        "type": !currentDrink || "automatic",
                         "name": 'name',
                         "tea": currentDrink.tea,
                         "sugar": currentDrink.sugar,
