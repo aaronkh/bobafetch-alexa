@@ -8,6 +8,8 @@
         "name": "Boba Tea",
         "summary": "Your Favorite Drink",
         "description": "Bubble tea (also known as pearl milk tea, bubble milk tea, or boba) (Chinese: 珍珠奶茶; pinyin: zhēnzhū nǎichá, 波霸奶茶; bōbà nǎichá) is a Taiwanese tea-based drink invented in Tainan and Taichung in the 1980s.",
+        "smallIconUri": "https://i.ibb.co/5RrCzh6/Untitled.png",
+        "largeIconUri": "https://i.ibb.co/PFkzPcq/Untitled.png",
         "examplePhrases": [
           "For Future Use – Example Phrase 1",
           "For Future Use – Example Phrase 2",
