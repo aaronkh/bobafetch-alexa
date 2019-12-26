@@ -3,7 +3,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "uri": "arn:aws:lambda:us-east-1:552719073693:function:002f4eb0-0f05-45a7-af49-f0b4e7fb1a11:Release_0"
+          "uri": "arn:aws:lambda:us-east-1:552719073693:function:35550e4c-b63e-45c0-9321-a18b2d059007:Release_0"
         },
         "interfaces": [
           {
