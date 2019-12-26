@@ -6,6 +6,15 @@ module.exports.YES_INTENTS = {
     LAST_DRINK_CONFIRMATION: 'LAST_DRINK_CONFIRMATION'
 }
 
+module.exports.joinWithAnd = (arr) => {
+    if(arr.length == 0) return ''
+    let res = ''
+    for(let i = 0; i < arr.length - 1; i++) {
+        res += arr[i] + ', '
+    }
+    res += 'and ' + arr[arr.length - 1]
+    return res
+}
 
 // @source https://www.hackster.io/alexagadgets/lego-mindstorms-voice-challenge-setup-17300f
 module.exports.getConnectedEndpoints = function(apiEndpoint, apiAccessToken) {
