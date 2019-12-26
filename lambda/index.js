@@ -5,6 +5,7 @@ const persistence = require('ask-sdk-s3-persistence-adapter')
 // LOCAL IMPORTS
 const common = require('./common.js')
 
+const TEAS = ['oolong milk tea', 'classic milk tea', 'jasmine milk tea']
 const persistenceAdapter = new persistence.S3PersistenceAdapter({
     bucketName: process.env.S3_PERSISTENCE_BUCKET
 })
@@ -334,6 +335,24 @@ const ManualListenerIntentHandler = {
 
 }
 
+const MenuIntentHandler = {
+    canHandle(handlerInput) {
+        return (
+            Alexa.getRequestType(handlerInput.requestEnvelope) ===
+            'IntentRequest' &&
+            Alexa.getIntentName(handlerInput.requestEnvelope) ===
+            'MenuIntent'
+        )
+    },
+    handle(handlerInput) { 
+        return handlerInput.responseBuilder
+            .speak(`Right now, we have ${common.joinWithAnd(TEAS)}.`)
+            .reprompt(`Let me know if you want to order anything.`)
+            .getResponse()
+    }
+
+}
+
 const SessionEndedRequestHandler = {
     canHandle(handlerInput) {
         return (
@@ -400,6 +419,7 @@ module.exports.handler = Alexa.SkillBuilders.custom()
         ManualListenerIntentHandler,
         TogglePurchasingIntent,
         BobaPurchaseHandler,
+        MenuIntentHandler,
         MakeBobaIntentHandler,
         GetQueueIntentHandler,
         GetLastDrinkIntentHandler,
