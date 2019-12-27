@@ -3,7 +3,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "uri": "YOUR-URL-HERE"
+          "uri": "YOUR-URI-HERE"
         },
         "interfaces": [
           {
